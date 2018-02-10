@@ -5,7 +5,7 @@
         <v-card-title>
           <span class="headline">Login</span>
         </v-card-title>
-        <v-divider></v-divider>
+        <v-divider/>
         <v-card-text>
           <v-container grid-list-md>
             <v-layout wrap>
@@ -16,7 +16,7 @@
                   v-model="credentials.username"
                   required
                   prepend-icon="perm_identity"
-                ></v-text-field>
+                />
               </v-flex>
 
               <v-flex xs12>
@@ -27,15 +27,15 @@
                   required
                   type="password"
                   prepend-icon="lock_open"
-                ></v-text-field>
+                />
               </v-flex>
             </v-layout>
           </v-container>
           <small>*indicates required field</small>
         </v-card-text>
-        <v-divider></v-divider>
+        <v-divider/>
         <v-card-actions>
-          <v-spacer></v-spacer>
+          <v-spacer/>
           <v-btn color="blue darken-1" @click="close" flat>close</v-btn>
           <v-btn color="blue darken-1" @click="login" flat>login</v-btn>
         </v-card-actions>
@@ -45,6 +45,9 @@
 </template>
 
 <script>
+
+  import authServices from '@/services/auth'
+
   export default {
     props: {
       modal: Boolean
@@ -56,16 +59,25 @@
       }
     }),
     methods: {
-      close () {
+      close() {
         this.$emit('close')
       },
-      login () {
+      login() {
         let formData = new FormData();
-        formData.append('username', this.credentials.username);
-        formData.append('password', this.credentials.password);
 
-        this.$http.post('http://localhost:8002/login', formData)
-          .then(res => console.log(res))
+        formData.append('grant_type', 'password');
+        formData.append('username', 'admin.admin');
+        formData.append('password', 'jwtpass');
+
+        this.$store.dispatch('login', {
+          credentials : this.credentials,
+          formData : formData,
+          redirect : 'test'
+        }).then(() => {
+          console.log('Login was successful!!!!!!!');
+          this.close()
+        })
+
       }
     }
   }
