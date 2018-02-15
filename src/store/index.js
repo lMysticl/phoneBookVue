@@ -6,7 +6,7 @@ import tokenService from '@/services/token'
 
 Vue.use(Vuex);
 
-const api_url = 'http://localhost:8080/';
+const api_url = 'https://vuejs-phone-book.herokuapp.com/';
 const login_url = api_url + 'oauth/token';
 const registration_url = api_url + "api/register";
 

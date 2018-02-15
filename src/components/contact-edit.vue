@@ -74,7 +74,7 @@
 </template>
 
 <script>
-  const api_url = 'http://localhost:8080/';
+  const api_url = 'https://vuejs-phone-book.herokuapp.com/';
   import tokenService from '@/services/token'
 
   export default {
