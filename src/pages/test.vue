@@ -4,12 +4,12 @@
       <v-flex style="max-width: 1250px" class="pt-5">
         <v-card>
           <v-card-actions>
-            <contact-add @update="loadContactList"></contact-add>
+            <contact-add @update="loadContactList"/>
             <v-btn v-if="selected.length" @click="deleteSelectedContacts">Delete selected</v-btn>
 
-            <v-spacer></v-spacer>
+            <v-spacer/>
 
-            <v-text-field box label="Search" v-model="search"></v-text-field>
+            <v-text-field box label="Search" v-model="search"/>
           </v-card-actions>
           <v-data-table
             :loading = 'loading'
@@ -28,7 +28,7 @@
                     primary
                     hide-details
                     v-model="props.selected"
-                  ></v-checkbox>
+                  />
                 </td>
                 <td class="text-xs-right">{{ props.item.contactId }}</td>
                 <td class="text-xs-right">{{ props.item.firstname }}</td>
@@ -51,7 +51,7 @@
           </v-data-table>
         </v-card>
 
-        <contact-edit @update="loadContactList" :contact = 'contact'></contact-edit>
+        <contact-edit @update="loadContactList" :contact='contact'/>
       </v-flex>
     </v-layout>
   </v-container>
@@ -107,10 +107,8 @@
             }
           })
             .then(response => {
-              setTimeout(() => {
                 this.contacts = response.body;
                 this.loading = false
-              }, 500)
             })
         },
         selectContact (id) {
@@ -128,7 +126,8 @@
               }
             })
             .then(() => {
-              console.log('Contact -> ' + ids + ' has been deleted');
+              // console.log('Contact -> ' + ids + ' has been deleted');
+              this.selected = [];
               this.loadContactList ()
             })
         },
@@ -141,6 +140,7 @@
 
           form.append('contactId',  ids);
 
+
           console.log(form.getAll('contactId'));
 
           this.$http.post(api_url + 'contacts/deleteList', form,
@@ -151,6 +151,7 @@
             })
             .then(() => {
               // console.log('Contact -> ' + ids + ' has been deleted');
+              this.selected = [];
               this.loadContactList ()
             })
         }
@@ -159,7 +160,7 @@
         pages () {
           if (this.pagination.rowsPerPage == null ||
             this.pagination.totalItems == null
-          ) return 0
+          ) return 0;
 
           return Math.ceil(this.contacts.length / this.pagination.rowsPerPage)
         }

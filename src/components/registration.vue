@@ -3,7 +3,7 @@
     <v-dialog v-model="modal" persistent max-width="500px">
       <v-card>
         <v-card-title>
-          <span class="headline">Login</span>
+          <span class="headline">Registration</span>
         </v-card-title>
 
         <v-divider/>
@@ -23,24 +23,41 @@
             <v-layout wrap>
               <v-flex xs12>
                 <v-text-field
-                  id="username"
+                  id="reg_username"
                   label="Username"
-                  v-model="credentials.username"
-                  required
+                  v-model="register.username"
                   prepend-icon="perm_identity"
                 />
               </v-flex>
 
               <v-flex xs12>
                 <v-text-field
-                  id="password"
+                  id="firstname"
+                  label="First name*"
+                  v-model="register.firstname"
+                  prepend-icon="lock_open"
+                />
+              </v-flex>
+
+
+              <v-flex xs12>
+                <v-text-field
+                  id="reg_password"
                   label="Password"
-                  v-model="credentials.password"
-                  required
+                  v-model="register.password"
                   type="password"
                   prepend-icon="lock_open"
                 />
               </v-flex>
+              <v-flex xs12>
+                <v-text-field
+                  id="middlename"
+                  label="Middle name*"
+                  v-model="register.middlename"
+                  prepend-icon="lock_open"
+                />
+              </v-flex>
+
             </v-layout>
           </v-container>
           <small>*indicates required field</small>
@@ -49,7 +66,7 @@
         <v-card-actions>
           <v-spacer/>
           <v-btn color="blue darken-1" @click="close" flat>close</v-btn>
-          <v-btn color="blue darken-1" @click="login" flat>login</v-btn>
+          <v-btn color="blue darken-1" @click="registration" flat>registration</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -64,11 +81,9 @@
     props: {
       modal: Boolean
     },
+
     data: () => ({
-      credentials: {
-        username: null,
-        password: null
-      },
+      register:{},
       error: false,
       errorMessage: null
     }),
@@ -79,20 +94,12 @@
       clearError () {
         this.errorMessage = null
       },
-      login() {
-        let formData = new FormData();
-
-        formData.append('grant_type', 'password');
-        formData.append('username', this.credentials.username);
-        formData.append('password',  this.credentials.password);
-
-        this.$store.dispatch('login', {
-          credentials : this.credentials,
-          formData : formData,
-          redirect : 'test'
+      registration() {
+        this.$store.dispatch('registration', {
+          data: this.register
         })
           .then(() => {
-            console.log('Login was successful!!!!!!!');
+            console.log('Registration was successful!!!!!!!');
             this.close()
         })
           .catch((error) => {

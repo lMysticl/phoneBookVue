@@ -3,7 +3,7 @@
     <v-toolbar
       app>
 
-      <v-toolbar-items class="hidden-sm-and-down">
+      <v-toolbar-items >
 
         <v-btn exact="" flat to="/">
           Phone Book
@@ -17,7 +17,12 @@
 
       <v-spacer/>
 
-      <v-toolbar-items class="hidden-sm-and-down">
+
+      <v-toolbar-items >
+        <v-btn v-if="!isAuth" flat  @click="openRegisterModal">
+          <v-icon left>account_circle</v-icon>
+          Registration
+        </v-btn>
         <v-btn v-if="!isAuth" flat @click="openLoginModal">
           <v-icon left>account_circle</v-icon>
           Login
@@ -39,6 +44,11 @@
       @close='closeLoginModal'
     />
 
+    <app-registration
+      :modal='register'
+      @close='closeRegisterModal'
+    />
+
     <v-footer app>
       <span>&copy; {{ todayYear }}</span>
     </v-footer>
@@ -47,19 +57,29 @@
 
 <script>
   import appLogin from '@/components/app-login'
+  import appRegistration from '@/components/registration'
 
   export default {
     components: {
-      appLogin
+      appLogin,
+      appRegistration
     },
     data() {
       return {
         login: false,
+        register: false,
       }
     },
     methods: {
       openLoginModal () {
         this.login = true
+      },
+
+      closeRegisterModal () {
+        this.register = false
+      },
+      openRegisterModal () {
+        this.register = true
       },
 
       closeLoginModal () {

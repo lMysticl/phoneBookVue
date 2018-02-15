@@ -27,7 +27,7 @@ router.beforeEach((to, from, next) => {
     tokenservice.deleteToken();
     store.commit('setAuth', false)
   } else {
-    store.commit('setAuth', true);
+     store.commit('setAuth', true);
     next()
   }
 

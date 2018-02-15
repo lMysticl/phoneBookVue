@@ -83,7 +83,6 @@
   export default {
     data: () => ({
       modal: false,
-
       firstname: null,
       middlename: null,
       lastname: null,
@@ -93,10 +92,19 @@
       mobilePhone: null,
     }),
     methods: {
-      close () {
+      close() {
         this.modal = false
       },
-      open () {
+      clean() {
+        this.firstname = null;
+        this.lastname = null;
+        this.middlename = null;
+        this.address = null;
+        this.email = null;
+        this.homePhone = null;
+        this.mobilePhone = null
+      },
+      open() {
         this.modal = true
       },
       save() {
@@ -119,6 +127,7 @@
           .then(() => {
             this.close();
             this.$emit('update');
+            this.clean();
             console.log('Contact has been added')
           })
       }

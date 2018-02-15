@@ -8,7 +8,7 @@ Vue.use(Vuex);
 
 const api_url = 'http://localhost:8080/';
 const login_url = api_url + 'oauth/token';
-const registration_url = api_url + "/registration";
+const registration_url = api_url + "api/register";
 
 
 function b64EncodeUnicode(str) {
@@ -48,11 +48,12 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    login({commit},{credentials, formData, redirect}) {
+     login({commit},{credentials, formData, redirect}) {
+
       return Vue.http.post(
         login_url,
         formData,
-        {headers: {'authorization': "Basic " + b64EncodeUnicode(credentials.username + ':' + credentials.password)}}
+        {headers: {'authorization': "Basic " + b64EncodeUnicode('testjwtclientid:XY7kmzoNzl100')}}
       )
         .then(res => {
           const token = res.body.access_token;
@@ -61,6 +62,26 @@ export default new Vuex.Store({
           if (redirect) {
             router.push(redirect)
           }
+          return true
+        })
+    },
+
+    registration({commit},{credentials, data, redirect}) {
+
+
+
+
+
+      return Vue.http.post(
+        registration_url,
+        data
+        // ,{headers: {'Authorization': tokenService.getAuthHeader()}}
+      )
+        .then(res => {
+          if (redirect) {
+            router.push(redirect)
+          }
+
           return true
         })
     },
