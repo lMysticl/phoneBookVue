@@ -1,7 +1,0 @@
-{
-  "name": "Start on Heroku",
-  "description": "A barebones Node.js app using Express 4",
-  "repository": "https://github.com/lMysticl/phoneBookVue",
-  "keywords": ["node", "express", "heroku"],
-  "image": "heroku/nodejs"
-}

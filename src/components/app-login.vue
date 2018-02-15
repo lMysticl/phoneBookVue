@@ -58,7 +58,6 @@
 
 <script>
 
-  import authServices from '@/services/auth'
 
   export default {
     props: {
