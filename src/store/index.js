@@ -32,6 +32,7 @@ export default new Vuex.Store({
     isAuth(state) {
       return state.isAuth
     },
+
     redirect(state) {
       return state.redirect
     },
@@ -68,14 +69,9 @@ export default new Vuex.Store({
 
     registration({commit},{credentials, data, redirect}) {
 
-
-
-
-
       return Vue.http.post(
         registration_url,
         data
-        // ,{headers: {'Authorization': tokenService.getAuthHeader()}}
       )
         .then(res => {
           if (redirect) {

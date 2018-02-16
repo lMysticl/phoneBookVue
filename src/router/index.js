@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import test from '@/pages/test'
+import welcome from '@/pages/welcome'
 import store from '../store'
 import tokenservice from '@/services/token'
 
@@ -9,6 +10,10 @@ Vue.use(Router);
 const router = new Router({
   mode: 'history',
   routes: [
+    {
+      path: '/',
+      component: welcome
+    },
     {
       path: '/test',
       component: test,

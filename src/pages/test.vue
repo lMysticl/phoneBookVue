@@ -3,14 +3,19 @@
     <v-layout justify-center>
       <v-flex style="max-width: 1250px" class="pt-5">
         <v-card>
-          <v-card-actions>
-            <contact-add @update="loadContactList"/>
-            <v-btn v-if="selected.length" color="red" dark @click="deleteSelectedContacts">Delete selected</v-btn>
+          <v-container fluid grid-list-md>
+            <v-layout row wrap align-center>
+              <v-flex xs12 md6>
+                <v-text-field box label="Search" v-model="search"/>
+              </v-flex>
 
-            <v-spacer/>
+              <v-flex xs12 md6>
+                <contact-add @update="loadContactList"/>
 
-            <v-text-field box label="Search" v-model="search"/>
-          </v-card-actions>
+                <v-btn v-if="selected.length" :loading="deleting" color="red" dark @click="deleteSelectedContacts">Delete selected</v-btn>
+              </v-flex>
+            </v-layout>
+          </v-container>
 
           <v-divider></v-divider>
 
@@ -77,35 +82,35 @@
                   <v-list dense>
                     <v-list-tile>
                       <v-list-tile-content>Contact ID:</v-list-tile-content>
-                      <v-list-tile-content class="align-end">{{ props.item.contactId }}</v-list-tile-content>
+                      <v-list-tile-content class="align-end">{{ props.item.contactId || '-'  }}</v-list-tile-content>
                     </v-list-tile>
                     <v-list-tile>
                       <v-list-tile-content>First name:</v-list-tile-content>
-                      <v-list-tile-content class="align-end">{{ props.item.firstname }}</v-list-tile-content>
+                      <v-list-tile-content class="align-end">{{ props.item.firstname || '-'  }}</v-list-tile-content>
                     </v-list-tile>
                     <v-list-tile>
                       <v-list-tile-content>Last name:</v-list-tile-content>
-                      <v-list-tile-content class="align-end">{{ props.item.lastname }}</v-list-tile-content>
+                      <v-list-tile-content class="align-end">{{ props.item.lastname || '-'  }}</v-list-tile-content>
                     </v-list-tile>
                     <v-list-tile>
                       <v-list-tile-content>Middle name:</v-list-tile-content>
-                      <v-list-tile-content class="align-end">{{ props.item.middlename }}</v-list-tile-content>
+                      <v-list-tile-content class="align-end">{{ props.item.middlename || '-'  }}</v-list-tile-content>
                     </v-list-tile>
                     <v-list-tile>
                       <v-list-tile-content>Mobile phone:</v-list-tile-content>
-                      <v-list-tile-content class="align-end">{{ props.item.mobilePhone }}</v-list-tile-content>
+                      <v-list-tile-content class="align-end">{{ props.item.mobilePhone || '-'  }}</v-list-tile-content>
                     </v-list-tile>
                     <v-list-tile>
                       <v-list-tile-content>Home phone:</v-list-tile-content>
-                      <v-list-tile-content class="align-end">{{ props.item.homePhone }}</v-list-tile-content>
+                      <v-list-tile-content class="align-end">{{ props.item.homePhone || '-'  }}</v-list-tile-content>
                     </v-list-tile>
                     <v-list-tile>
                       <v-list-tile-content>Address:</v-list-tile-content>
-                      <v-list-tile-content class="align-end">{{ props.item.address }}</v-list-tile-content>
+                      <v-list-tile-content class="align-end">{{ props.item.address || '-'  }}</v-list-tile-content>
                     </v-list-tile>
                     <v-list-tile>
                       <v-list-tile-content>Email:</v-list-tile-content>
-                      <v-list-tile-content class="align-end">{{ props.item.email }}</v-list-tile-content>
+                      <v-list-tile-content class="align-end">{{ props.item.email || '-'  }}</v-list-tile-content>
                     </v-list-tile>
                   </v-list>
 
@@ -116,11 +121,11 @@
 
                     <v-spacer></v-spacer>
 
-                    <v-btn icon class="mx-0" @click="selectContact(props.item.contactId)">
+                    <v-btn :disabled="deleting" icon class="mx-0" @click="selectContact(props.item.contactId)">
                       <v-icon color="teal">edit</v-icon>
                     </v-btn>
 
-                    <v-btn icon class="mx-0" @click="deleteContact(props.item.contactId)">
+                    <v-btn :disabled="deleting" icon class="mx-0" @click="deleteContact(props.item.contactId)">
                       <v-icon color="pink">delete</v-icon>
                     </v-btn>
                   </v-card-actions>
@@ -158,6 +163,7 @@
       return {
         contact: {},
         loading: false,
+        deleting: false,
         selected: [],
         search: null,
         rowsPerPageItems: [4, 8, 12],
@@ -189,7 +195,7 @@
         for (let k in this.checkboxes) {
           if (this.checkboxes[k]) {
             const contact = this.contacts.find(el => (el.contactId == k));
-            console.log(contact)
+            console.log(contact);
             this.selected.push(contact)
           }
         }
@@ -230,14 +236,15 @@
       deleteSelectedContacts() {
         let form = new FormData();
 
+        this.deleting = true;
+
         let ids = this.selected.map(el => {
           return el.contactId
         });
 
+        console.log(ids);
+
         form.append('contactId', ids);
-
-
-        console.log(form.getAll('contactId'));
 
         this.$http.post(api_url + 'contacts/deleteList', form,
           {
@@ -246,10 +253,14 @@
             }
           })
           .then(() => {
-            // console.log('Contact -> ' + ids + ' has been deleted');
             this.selected = [];
-            this.loadContactList()
+            this.checkboxes = {};
+            this.loadContactList();
+            this.deleting = false;
           })
+          .catch(err => {
+            this.deleting = false;
+        })
       }
     },
 

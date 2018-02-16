@@ -1,5 +1,8 @@
 <template>
-  <v-app>
+  <v-app
+    dark
+    src="http://oxygennacdn3.oxygenna.com/wp-content/uploads/2015/11/18.jpg"
+  >
     <v-navigation-drawer
       v-model="drawer"
       fixed
@@ -8,32 +11,32 @@
       disable-resize-watcher
     >
       <v-list>
-        <v-list-tile avatar @click="openRegisterModal">
-          <v-list-tile-avatar v-if="!isAuth" >
+        <v-list-tile v-if="!isAuth" avatar @click="openRegisterModal">
+          <v-list-tile-avatar>
             <v-icon>fa-user-plus</v-icon>
           </v-list-tile-avatar>
 
-          <v-list-tile-content v-if="!isAuth">
+          <v-list-tile-content>
             <v-list-tile-title>Registration</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
 
-        <v-list-tile avatar @click="openLoginModal">
-          <v-list-tile-avatar v-if="!isAuth">
+        <v-list-tile v-if="!isAuth" avatar @click="openLoginModal">
+          <v-list-tile-avatar>
             <v-icon >fa-sign-in</v-icon>
           </v-list-tile-avatar>
 
-          <v-list-tile-content v-if="!isAuth">
+          <v-list-tile-content>
             <v-list-tile-title>Login</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
 
-        <v-list-tile  avatar @click="logOut">
-          <v-list-tile-avatar v-if="isAuth">
+        <v-list-tile v-if="isAuth" avatar @click="logOut">
+          <v-list-tile-avatar>
             <v-icon>fa-sign-out</v-icon>
           </v-list-tile-avatar>
 
-          <v-list-tile-content v-if="isAuth">
+          <v-list-tile-content>
             <v-list-tile-title>LogOut</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
@@ -46,7 +49,7 @@
           </v-list-tile-avatar>
 
           <v-list-tile-content>
-            <v-list-tile-title>Test page</v-list-tile-title>
+            <v-list-tile-title>Contacts page</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
@@ -66,7 +69,7 @@
         </v-btn>
 
         <v-btn exact="" flat @click="toTestPage">
-          Test Page
+          Contacts Page
         </v-btn>
 
       </v-toolbar-items>
@@ -106,7 +109,7 @@
     />
 
     <v-footer app>
-      <span>&copy; dantedimon and mystic || {{ todayYear }} || &copy; </span>
+      <span class="pl-4">&copy; dantedimon and mystic | {{ todayYear }} | &copy; </span>
     </v-footer>
   </v-app>
 </template>
@@ -116,6 +119,7 @@
   import appRegistration from '@/components/registration'
 
   export default {
+    name: "welcome",
     components: {
       appLogin,
       appRegistration
@@ -172,3 +176,12 @@
     // }
   }
 </script>
+
+
+<style>
+  .content--wrap {
+    background-image: url("/static/material-wallpaper-2560x1024.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+</style>

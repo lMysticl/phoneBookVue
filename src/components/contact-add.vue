@@ -13,7 +13,15 @@
       </div>
 
       <v-divider/>
-
+      <v-alert
+        @input="clearError"
+        type="error"
+        dismissible
+        v-model="error"
+        transition="scale-transition"
+      >
+        {{ errorMessage }}
+      </v-alert>
       <v-card-text style="max-height: 400px">
         <v-form v-model="valid" ref="form" lazy-validation>
           <v-container grid-list-md>
@@ -113,6 +121,8 @@
       homePhone: "",
       mobilePhone: "",
       loading: false,
+      error: false,
+      errorMessage: null,
       firstnameRules: [
         v => !!v || 'This field is required',
         v => (v && v.length > 2) || 'This field must be more then two characters',
@@ -183,6 +193,9 @@
         this.homePhone = "";
         this.mobilePhone = ""
       },
+      clearError() {
+        this.errorMessage = null
+      },
       open() {
         this.modal = true
       },
@@ -212,7 +225,14 @@
               this.$emit('update');
               this.clean();
               console.log('Contact has been added')
-            })
+            }).catch((error) => {
+            console.log(error);
+            this.error = true;
+            this.loading = false;
+            this.errorMessage = error.body.error_description;
+            this.close();
+          })
+
         }
 
       }
