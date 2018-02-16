@@ -38,7 +38,7 @@
           </v-list-tile-content>
         </v-list-tile>
 
-        <v-divider></v-divider>
+        <v-divider/>
 
         <v-list-tile avatar @click="toTestPage">
           <v-list-tile-avatar>
@@ -106,7 +106,7 @@
     />
 
     <v-footer app>
-      <span>&copy; dantedimon and mystic|| {{ todayYear }} || &copy; </span>
+      <span>&copy; dantedimon and mystic || {{ todayYear }} || &copy; </span>
     </v-footer>
   </v-app>
 </template>
