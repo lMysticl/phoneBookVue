@@ -175,13 +175,13 @@
       },
       clean() {
         this.$refs.form.reset();
-        this.firstname = null;
-        this.lastname = null;
-        this.middlename = null;
-        this.address = null;
-        this.email = null;
-        this.homePhone = null;
-        this.mobilePhone = null
+        this.firstname = "";
+        this.lastname = "";
+        this.middlename = "";
+        this.address = "";
+        this.email = "";
+        this.homePhone = "";
+        this.mobilePhone = ""
       },
       open() {
         this.modal = true
