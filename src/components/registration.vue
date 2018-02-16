@@ -19,6 +19,7 @@
         </v-alert>
 
         <v-card-text>
+          <v-form v-model="valid" ref="form" lazy-validation>
           <v-container grid-list-md>
             <v-layout wrap>
               <v-flex xs12>
@@ -27,15 +28,20 @@
                   label="Username"
                   v-model="register.username"
                   prepend-icon="perm_identity"
+                  :rules="usernameRules"
+                  :disabled="loading"
+                  required
                 />
               </v-flex>
 
               <v-flex xs12>
                 <v-text-field
                   id="firstname"
-                  label="First name*"
+                  label="First name"
                   v-model="register.firstname"
-                  prepend-icon="lock_open"
+                  prepend-icon="face"
+                  :rules="firstnameRules"
+                  :disabled="loading"
                 />
               </v-flex>
 
@@ -43,30 +49,43 @@
               <v-flex xs12>
                 <v-text-field
                   id="reg_password"
-                  label="Password"
                   v-model="register.password"
                   type="password"
                   prepend-icon="lock_open"
+                  name="input-10-2"
+                  label="Enter your password"
+                  hint="At least 4 characters"
+                  required
+                  min="4"
+                  :append-icon="e3 ? 'visibility' : 'visibility_off'"
+                  :append-icon-cb="() => (e3 = !e3)"
+                  class="input-group--focused"
+                  :type="e3 ? 'password' : 'text'"
+                  :rules="passwordRules"
+                  :disabled="loading"
                 />
               </v-flex>
               <v-flex xs12>
                 <v-text-field
                   id="middlename"
-                  label="Middle name*"
+                  label="Middle name"
                   v-model="register.middlename"
-                  prepend-icon="lock_open"
+                  prepend-icon="person"
+                  :rules="middlenameRules"
+                  :disabled="loading"
                 />
               </v-flex>
 
             </v-layout>
           </v-container>
           <small>*indicates required field</small>
+          </v-form>
         </v-card-text>
         <v-divider/>
         <v-card-actions>
           <v-spacer/>
-          <v-btn color="blue darken-1" @click="close" flat>close</v-btn>
-          <v-btn color="blue darken-1" @click="registration" flat>registration</v-btn>
+          <v-btn color="blue darken-1" flat @click="close" :disabled="loading">close</v-btn>
+          <v-btn color="blue darken-1" flat @click="registration" :disabled="!valid" :loading="loading">Registration</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -81,32 +100,85 @@
       modal: Boolean
     },
 
+
     data: () => ({
+
       register:{},
       error: false,
-      errorMessage: null
+      errorMessage: "",
+      e3: true,
+      loading: false,
+      password: 'Password',
+      usernameRules: [
+        v => !!v || 'This field is required',
+        v => (v && v.length > 2) || 'This field must be more then two characters',
+      ],
+      passwordRules: [
+        v => !!v || 'This field is required',
+        v => (v && v.length > 4) || 'This field must be more then 4 characters',
+      ]
     }),
     methods: {
       close() {
+
+
         this.$emit('close')
       },
       clearError () {
         this.errorMessage = null
       },
+
       registration() {
+
+        if(this.$refs.form.validate()){
+        this.loading = true;
+          console.log('!!!!!!!');
+          console.log(this.register);
         this.$store.dispatch('registration', {
           data: this.register
         })
           .then(() => {
+            this.loading = false;
             console.log('Registration was successful!!!!!!!');
-            this.close()
-        })
+            console.log(this.register.username + this.register.password);
+            this.close();
+
+          })
           .catch((error) => {
             this.error = true;
             this.errorMessage = error.body.error_description
         })
+        }
 
       }
-    }
+    },
+
+    computed: {
+      middlenameRules () {
+        if (this.register.middlename) {
+          return [
+            v => (v && v.length > 2) || 'This field must be more then two characters',
+          ]
+        }
+      },
+
+
+      firstnameRules () {
+        if (this.register.firstname) {
+          return [
+            v => (v && v.length > 2) || 'This field must be more then two characters',
+          ]
+        }
+      },
+      valid: {
+        get () {
+
+          return !!this.register.username && !!this.register.password
+        },
+        set (v)  {
+
+        }
+      }
+    },
   }
 </script>
