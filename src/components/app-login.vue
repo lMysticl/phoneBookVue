@@ -23,6 +23,7 @@
             <v-layout wrap>
               <v-flex xs12>
                 <v-text-field
+                  :disabled="loading"
                   id="username"
                   label="Username"
                   v-model="credentials.username"
@@ -33,6 +34,7 @@
 
               <v-flex xs12>
                 <v-text-field
+                  :disabled="loading"
                   id="password"
                   label="Password"
                   v-model="credentials.password"
@@ -48,8 +50,8 @@
         <v-divider/>
         <v-card-actions>
           <v-spacer/>
-          <v-btn color="blue darken-1" @click="close" flat>close</v-btn>
-          <v-btn color="blue darken-1" @click="login" flat>login</v-btn>
+          <v-btn color="blue darken-1" @click="close" flat :disabled="loading">close</v-btn>
+          <v-btn color="blue darken-1" @click="login" flat :loading="loading">login</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -69,13 +71,14 @@
         password: null
       },
       error: false,
-      errorMessage: null
+      errorMessage: null,
+      loading: false
     }),
     methods: {
       close() {
         this.$emit('close')
       },
-      clearError () {
+      clearError() {
         this.errorMessage = null
       },
       login() {
@@ -83,21 +86,25 @@
 
         formData.append('grant_type', 'password');
         formData.append('username', this.credentials.username);
-        formData.append('password',  this.credentials.password);
+        formData.append('password', this.credentials.password);
+
+        this.loading = true;
 
         this.$store.dispatch('login', {
-          credentials : this.credentials,
-          formData : formData,
-          redirect : 'test'
+          credentials: this.credentials,
+          formData: formData,
+          redirect: 'test'
         })
           .then(() => {
             console.log('Login was successful!!!!!!!');
-            this.close()
-        })
+              this.loading = false;
+              this.close();
+          })
           .catch((error) => {
             this.error = true;
-            this.errorMessage = error.body.error_description
-        })
+            this.loading = false;
+            this.errorMessage = error.body.error_description;
+          })
 
       }
     }
