@@ -8,66 +8,86 @@
       <v-divider/>
 
       <v-card-text style="max-height: 400px">
-        <v-container grid-list-md>
-          <v-layout wrap>
-            <v-flex xs12>
-              <v-text-field
-                label="First name"
-                v-model="firstname"
-              />
-            </v-flex>
 
-            <v-flex xs12>
-              <v-text-field
-                label="Last name"
-                v-model="lastname"
-              />
-            </v-flex>
+        <v-form v-model="valid" ref="form" lazy-validation>
+          <v-container grid-list-md>
+            <v-layout wrap>
+              <v-flex xs12>
+                <v-text-field
+                  label="First name"
+                  v-model="firstname"
+                  :rules="firstnameRules"
+                  :disabled="loading"
+                />
+              </v-flex>
 
-            <v-flex xs12>
-              <v-text-field
-                label="Middle name"
-                v-model="middlename"
-              />
-            </v-flex>
+              <v-flex xs12>
+                <v-text-field
+                  label="Last name"
+                  v-model="lastname"
+                  :rules="lastnameRules"
+                  :disabled="loading"
+                />
+              </v-flex>
 
-            <v-flex xs12>
-              <v-text-field
-                label="Mobile phone"
-                v-model="mobilePhone"
-              />
-            </v-flex>
+              <v-flex xs12>
+                <v-text-field
+                  label="Middle name"
+                  v-model="middlename"
+                  :rules="middlenameRules"
+                  :disabled="loading"
+                />
+              </v-flex>
 
-            <v-flex xs12>
-              <v-text-field
-                label="Home phone"
-                v-model="homePhone"
-              />
-            </v-flex>
+              <v-flex xs12>
+                <v-text-field
+                  label="Mobile phone"
+                  v-model="mobilePhone"
+                  :rules="mobilePhoneRules"
+                  :disabled="loading"
+                  type="number"
+                />
+              </v-flex>
 
-            <v-flex xs12>
-              <v-text-field
-                label="Address"
-                v-model="address"
-              />
-            </v-flex>
+              <v-flex xs12>
+                <v-text-field
+                  label="Home phone"
+                  v-model="homePhone"
+                  :rules="homePhoneRules"
+                  :disabled="loading"
+                  type="number"
+                />
+              </v-flex>
 
-            <v-flex xs12>
-              <v-text-field
-                label="Email"
-                v-model="email"
-              />
-            </v-flex>
-          </v-layout>
-        </v-container>
+              <v-flex xs12>
+                <v-text-field
+                  label="Address"
+                  :disabled="loading"
+                  :rules="addressRules"
+                  v-model="address"
+                />
+              </v-flex>
+
+              <v-flex xs12>
+                <v-text-field
+                  label="Email"
+                  :disabled="loading"
+                  :rules="emailRules"
+                  v-model="email"
+                  type="email"
+                />
+              </v-flex>
+            </v-layout>
+          </v-container>
+        </v-form>
       </v-card-text>
 
       <v-divider/>
 
       <v-card-actions>
         <v-spacer/>
-        <v-btn color="blue darken-1" flat @click.native="modal = false">Close</v-btn>
-        <v-btn color="blue darken-1" flat @click.native="save">Save</v-btn>
+        <v-btn color="blue darken-1" flat @click.native="close" :disabled="loading">Close</v-btn>
+        <v-btn color="blue darken-1" flat @click.native="save" :disabled="!valid && update" :loading="loading">Save</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -81,7 +101,7 @@
     props: ['contact'],
     data: () => ({
       modal: false,
-
+      loading: false,
       contactId: null,
       firstname: null,
       middlename: null,
@@ -90,58 +110,138 @@
       email: null,
       homePhone: null,
       mobilePhone: null,
+      firstnameRules: [
+        v => !!v || 'This field is required',
+        v => (v && v.length > 2) || 'This field must be more then two characters',
+      ],
+      mobilePhoneRules: [
+        v => !!v || 'This field is required',
+        v => (v && v.length > 2) || 'This field must be more then two characters',
+      ]
     }),
-    methods: {
-      setValues () {
-        this.contactId = this.contact.contactId;
-        this.firstname = this.contact.firstname;
-        this.middlename = this.contact.middlename;
-        this.lastname = this.contact.lastname;
-        this.address = this.contact.address;
-        this.email = this.contact.email;
-        this.homePhone = this.contact.homePhone;
-        this.mobilePhone = this.contact.mobilePhone;
+    computed: {
+      lastnameRules() {
+        if (this.lastname) {
+          return [
+            v => (v && v.length > 2) || 'This field must be more then two characters',
+          ]
+        }
       },
-      close () {
-        this.modal = false
+      middlenameRules() {
+        if (this.middlename) {
+          return [
+            v => (v && v.length > 2) || 'This field must be more then two characters',
+          ]
+        }
       },
-      open () {
-        this.modal = true
+      homePhoneRules() {
+        if (this.homePhone) {
+          return [
+            v => (v && v.length > 2) || 'This field must be more then two characters',
+          ]
+        }
       },
-      save() {
-        let form = new FormData();
+      addressRules() {
+        if (this.address) {
+          return [
+            v => (v && v.length > 2) || 'This field must be more then two characters',
+          ]
+        }
+      },
+      emailRules() {
+        if (this.email) {
+          return [
+            v => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid',
+          ]
+        }
+      },
+      update () {
+        return this.contact.firstname !== this.firstname ||
+          this.contact.middlename !== this.middlename||
+          this.contact.lastname !== this.lastname||
+          this.contact.address !== this.address||
+          this.contact.email !== this.email||
+          this.contact.homePhone !== this.homePhone||
+          this.contact.mobilePhone !== this.mobilePhone
 
-        form.append('contactId', this.contactId);
-        form.append('firstname', this.firstname);
-        form.append('lastname', this.lastname);
-        form.append('middlename', this.middlename);
-        form.append('address', this.address);
-        form.append('email', this.email);
-        form.append('homePhone', this.homePhone);
-        form.append('mobilePhone', this.mobilePhone);
+      },
+      valid: {
+        get() {
+          return !!this.firstname && !!this.mobilePhone
+        },
+        set(v) {
+        }
+      }},
+      methods: {
+        setValues() {
+          this.contactId = this.contact.contactId;
+          this.firstname = this.contact.firstname;
+          this.middlename = this.contact.middlename;
+          this.lastname = this.contact.lastname;
+          this.address = this.contact.address;
+          this.email = this.contact.email;
+          this.homePhone = this.contact.homePhone;
+          this.mobilePhone = this.contact.mobilePhone;
+        },
+        close() {
+          this.modal = false;
+          this.clean();
+        },
+        clean() {
+          this.$refs.form.reset();
+          this.firstname = "";
+          this.lastname = "";
+          this.middlename = "";
+          this.address = "";
+          this.email = "";
+          this.homePhone = "";
+          this.mobilePhone = ""
+        },
+        open() {
+          this.modal = true
+        },
+        save() {
+          if(this.$refs.form.validate()){
+          let form = new FormData();
 
-        this.$http.post(api_url + 'contacts/update', form,
-          {
-            headers: {
-              'Authorization': tokenService.getAuthHeader()
-            }
+          form.append('contactId', this.contactId);
+          form.append('firstname', this.firstname);
+          form.append('lastname', this.lastname);
+          form.append('middlename', this.middlename);
+          form.append('address', this.address);
+          form.append('email', this.email);
+          form.append('homePhone', this.homePhone);
+          form.append('mobilePhone', this.mobilePhone);
+
+          this.loading = true;
+
+          this.$http.post(api_url + 'contacts/update', form,
+            {
+              headers: {
+                'Authorization': tokenService.getAuthHeader()
+              }
+            })
+            .then(() => {
+              this.loading = false;
+              this.close();
+              this.$emit('update');
+              this.clean();
+            }).catch((error) => {
+            this.loading = false;
           })
-          .then(() => {
-            this.close();
-            this.$emit('update');
-            console.log('Contact has been updated')
-          })
-      }
-    },
-    watch: {
-      contact(v) {
-        if (Object.keys(v).length) {
-          this.open();
-          this.setValues()
+        }
+        }
+      },
+      watch: {
+        contact(v) {
+          if (Object.keys(v).length) {
+            this.open();
+            this.setValues()
+          }
         }
       }
     }
-  }
+
 </script>
 
 <style scoped>

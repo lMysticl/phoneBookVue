@@ -7,17 +7,32 @@
 
       <v-divider/>
 
-      <v-alert
-        @input="clearError"
-        type="error"
-        dismissible
-        v-model="error"
-        transition="scale-transition"
-      >
-        {{ errorMessage }}
-      </v-alert>
+
 
       <v-card-text>
+
+        <v-alert
+          @input= "clearInfo"
+          type="info"
+          dismissible
+          :value= "info"
+          transition= "scale-transition"
+          outline
+        >
+          In the first request to the Heroku server, there can be delays which disappear in next request.
+        </v-alert>
+
+        <v-alert
+          @input="clearError"
+          type="error"
+          dismissible
+          v-model="error"
+          transition="scale-transition"
+        >
+          {{ errorMessage }}
+        </v-alert>
+
+
         <v-form v-model="valid" ref="form" lazy-validation>
           <v-container grid-list-md>
             <v-layout wrap>
@@ -128,6 +143,9 @@
         this.register.middlename = "";
         this.register.firstname = "";
       },
+      clearInfo() {
+        this.$store.commit('setInfo', false)
+      },
       registration() {
 
         if(this.$refs.form.validate()){
@@ -160,6 +178,9 @@
         }
       },
 
+      info() {
+        return this.$store.getters.infoShowed
+      },
 
       firstnameRules () {
         if (this.register.firstname) {

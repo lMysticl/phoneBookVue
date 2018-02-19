@@ -7,17 +7,30 @@
 
       <v-divider/>
 
-      <v-alert
-        @input="clearError"
-        type="error"
-        dismissible
-        v-model="error"
-        transition="scale-transition"
-      >
-        {{ errorMessage }}
-      </v-alert>
 
       <v-card-text>
+
+        <v-alert
+          @input= "clearInfo"
+          type="info"
+          dismissible
+          :value= "info"
+          transition= "scale-transition"
+          outline
+        >
+          In the first request to the Heroku server, there can be delays which disappear in next request.
+        </v-alert>
+
+        <v-alert
+          @input="clearError"
+          type="error"
+          dismissible
+          v-model="error"
+          transition="scale-transition"
+        >
+          {{ errorMessage }}
+        </v-alert>
+
         <v-container grid-list-md>
           <v-layout wrap>
             <v-flex xs12>
@@ -72,6 +85,11 @@
       errorMessage: null,
       loading: false
     }),
+    computed: {
+      info() {
+        return this.$store.getters.infoShowed
+      }
+    },
     methods: {
       close() {
         this.$emit('close');
@@ -80,6 +98,9 @@
       },
       clearError() {
         this.errorMessage = null
+      },
+      clearInfo() {
+        this.$store.commit('setInfo', false)
       },
       clean() {
         this.credentials.username = "";
@@ -105,11 +126,9 @@
             this.clean();
           })
           .catch((error) => {
-            console.log(error);
             this.error = true;
             this.loading = false;
             this.errorMessage = error.body.error_description;
-            this.close();
           })
 
       }

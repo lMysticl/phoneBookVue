@@ -13,15 +13,7 @@
       </div>
 
       <v-divider/>
-      <v-alert
-        @input="clearError"
-        type="error"
-        dismissible
-        v-model="error"
-        transition="scale-transition"
-      >
-        {{ errorMessage }}
-      </v-alert>
+
       <v-card-text style="max-height: 400px">
         <v-form v-model="valid" ref="form" lazy-validation>
           <v-container grid-list-md>
@@ -59,6 +51,7 @@
                   label="Mobile phone"
                   v-model="mobilePhone"
                   :rules="mobilePhoneRules"
+                  type="number"
                   :disabled="loading"
                   required
                 />
@@ -69,6 +62,7 @@
                   label="Home phone"
                   v-model="homePhone"
                   :rules="homePhoneRules"
+                  type="number"
                   :disabled="loading"
                 />
               </v-flex>
@@ -86,6 +80,7 @@
                 <v-text-field
                   label="Email"
                   v-model="email"
+                  type="email"
                   :rules="emailRules"
                   :disabled="loading"
                 />
@@ -164,7 +159,7 @@
       emailRules () {
         if (this.email) {
           return [
-            v => (v && v.length > 2) || 'This field must be more then two characters',
+            v => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid',
           ]
         }
       },
@@ -193,9 +188,7 @@
         this.homePhone = "";
         this.mobilePhone = ""
       },
-      clearError() {
-        this.errorMessage = null
-      },
+
       open() {
         this.modal = true
       },
@@ -224,13 +217,8 @@
               this.close();
               this.$emit('update');
               this.clean();
-              console.log('Contact has been added')
             }).catch((error) => {
-            console.log(error);
-            this.error = true;
             this.loading = false;
-            this.errorMessage = error.body.error_description;
-            this.close();
           })
 
         }

@@ -22,12 +22,16 @@ function b64EncodeUnicode(str) {
 export default new Vuex.Store({
   state: {
     user: {},
+    info: true,
     redirect: null,
     isAuth: false
   },
   getters: {
     user(state) {
       return state.user
+    },
+    infoShowed(state) {
+      return state.info
     },
     isAuth(state) {
       return state.isAuth
@@ -44,12 +48,15 @@ export default new Vuex.Store({
     setRedirect(state, payload) {
       state.redirect = payload
     },
-    setAuth(state, payload){
+    setAuth(state, payload) {
       state.isAuth = payload
+    },
+    setInfo(state, payload){
+      state.info = payload
     }
   },
   actions: {
-     login({commit},{credentials, formData, redirect}) {
+    login({commit}, {credentials, formData, redirect}) {
 
       return Vue.http.post(
         login_url,
@@ -67,7 +74,7 @@ export default new Vuex.Store({
         })
     },
 
-    registration({commit},{credentials, data, redirect}) {
+    registration({commit}, {credentials, data, redirect}) {
 
       return Vue.http.post(
         registration_url,
@@ -81,7 +88,7 @@ export default new Vuex.Store({
           return true
         })
     },
-    logOut({commit}){
+    logOut({commit}) {
       tokenService.deleteToken();
       commit('setAuth', false);
       router.push('/')
