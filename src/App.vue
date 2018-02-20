@@ -151,7 +151,7 @@
       },
       toTestPage () {
         if (this.isAuth) {
-          this.$router.push('/test')
+          this.$router.push('/contacts')
         } else {
           this.openLoginModal()
         }

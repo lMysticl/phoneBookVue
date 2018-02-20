@@ -39,13 +39,23 @@
                 />
               </v-flex>
 
+              <v-select
+                label="Country"
+                v-model="country"
+                :items="countries"
+                @change="updateMask"
+              />
+
               <v-flex xs12>
                 <v-text-field
                   label="Mobile phone"
                   v-model="mobilePhone"
+                  ref="mobilePhone"
                   :rules="mobilePhoneRules"
                   :disabled="loading"
-                  type="number"
+                  :mask="phoneMasks[country]"
+                  :hint="phoneMasks[country]"
+                  type="tel"
                 />
               </v-flex>
 
@@ -53,9 +63,12 @@
                 <v-text-field
                   label="Home phone"
                   v-model="homePhone"
+                  ref="homePhone"
                   :rules="homePhoneRules"
                   :disabled="loading"
-                  type="number"
+                  type="tel"
+                  :mask="phoneMasks[country]"
+                  :hint="phoneMasks[country]"
                 />
               </v-flex>
 
@@ -74,7 +87,6 @@
                   :disabled="loading"
                   :rules="emailRules"
                   v-model="email"
-                  type="email"
                 />
               </v-flex>
             </v-layout>
@@ -87,29 +99,33 @@
       <v-card-actions>
         <v-spacer/>
         <v-btn color="blue darken-1" flat @click.native="close" :disabled="loading">Close</v-btn>
-        <v-btn color="blue darken-1" flat @click.native="save" :disabled="!valid && update" :loading="loading">Save</v-btn>
+        <v-btn color="blue darken-1" flat @click.native="save" :disabled="!valid || ! update" :loading="loading">Save</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 
 <script>
-  const api_url = 'https://vuejs-phone-book.herokuapp.com/';
   import tokenService from '@/services/token'
+  import phoneMasks from '@/phoneMasks'
+
+  const api_url = 'https://vuejs-phone-book.herokuapp.com/';
 
   export default {
     props: ['contact'],
     data: () => ({
       modal: false,
+      country: 'Australia',
+      phoneMasks: phoneMasks,
       loading: false,
-      contactId: null,
-      firstname: null,
-      middlename: null,
-      lastname: null,
-      address: null,
-      email: null,
-      homePhone: null,
-      mobilePhone: null,
+      contactId: "",
+      firstname: "",
+      middlename: "",
+      lastname: "",
+      address: "",
+      email: "",
+      homePhone: "",
+      mobilePhone: "",
       firstnameRules: [
         v => !!v || 'This field is required',
         v => (v && v.length > 2) || 'This field must be more then two characters',
@@ -120,6 +136,15 @@
       ]
     }),
     computed: {
+      countries () {
+        let countries = [];
+
+        for (let c in this.phoneMasks) {
+          countries.push(c)
+        }
+
+        return countries
+      },
       lastnameRules() {
         if (this.lastname) {
           return [
@@ -173,6 +198,14 @@
         }
       }},
       methods: {
+        updateMask () {
+          if (this.country) {
+            setTimeout(() => {
+              this.homePhone = this.phoneMasks[this.country].replace(/#/g, '');
+              this.mobilePhone = this.phoneMasks[this.country].replace(/#/g, '');
+            }, 50)
+          }
+        },
         setValues() {
           this.contactId = this.contact.contactId;
           this.firstname = this.contact.firstname;
@@ -186,6 +219,7 @@
         close() {
           this.modal = false;
           this.clean();
+          this.$emit('close')
         },
         clean() {
           this.$refs.form.reset();
@@ -207,11 +241,12 @@
           form.append('contactId', this.contactId);
           form.append('firstname', this.firstname);
           form.append('lastname', this.lastname);
-          form.append('middlename', this.middlename);
-          form.append('address', this.address);
-          form.append('email', this.email);
-          form.append('homePhone', this.homePhone);
-          form.append('mobilePhone', this.mobilePhone);
+            form.append('middlename', this.middlename);
+            form.append('country', this.country);
+            form.append('address', this.address);
+            form.append('email', this.email);
+            form.append('homePhone', this.homePhone);
+            form.append('mobilePhone', this.mobilePhone);
 
           this.loading = true;
 

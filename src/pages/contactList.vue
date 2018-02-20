@@ -5,11 +5,11 @@
         <v-card>
           <v-container fluid grid-list-md>
             <v-layout row wrap align-center>
-              <v-flex xs12 md6>
+              <v-flex xs12 md7>
                 <v-text-field box label="Search" v-model="search"/>
               </v-flex>
 
-              <v-flex xs12 md6>
+              <v-flex xs12 md7>
                 <contact-add @update="loadContactList"/>
 
                 <v-btn v-if="selected.length" :loading="deleting" color="red" dark @click="deleteSelectedContacts">Delete selected</v-btn>
@@ -43,6 +43,7 @@
                 <td class="text-xs-right">{{ props.item.firstname || '-' }}</td>
                 <td class="text-xs-right">{{ props.item.lastname || '-' }}</td>
                 <td class="text-xs-right">{{ props.item.middlename || '-' }}</td>
+                <td class="text-xs-right">{{ props.item.country || '-' }}</td>
                 <td class="text-xs-right">{{ props.item.mobilePhone || '-' }}</td>
                 <td class="text-xs-right">{{ props.item.homePhone || '-' }}</td>
                 <td class="text-xs-right">{{ props.item.address || '-' }}</td>
@@ -97,6 +98,11 @@
                       <v-list-tile-content class="align-end">{{ props.item.middlename || '-'  }}</v-list-tile-content>
                     </v-list-tile>
                     <v-list-tile>
+                      <v-list-tile-content>Country:</v-list-tile-content>
+                      <v-list-tile-content class="align-end">{{ props.item.country || '-'  }}</v-list-tile-content>
+                    </v-list-tile>
+
+                    <v-list-tile>
                       <v-list-tile-content>Mobile phone:</v-list-tile-content>
                       <v-list-tile-content class="align-end">{{ props.item.mobilePhone || '-'  }}</v-list-tile-content>
                     </v-list-tile>
@@ -139,7 +145,7 @@
           </v-container>
         </v-card>
 
-        <contact-edit @update="loadContactList" :contact='contact'/>
+        <contact-edit @close="clearContact" @update="loadContactList" :contact='contact'/>
       </v-flex>
     </v-layout>
   </v-container>
@@ -176,7 +182,8 @@
           {text: 'First Name', value: 'firstname'},
           {text: 'Last Name', value: 'lastname'},
           {text: 'Middle Name', value: 'middlename'},
-          {text: 'Mobile Name', value: 'mobilePhone'},
+          {text: 'Country', value: 'country'},
+          {text: 'Mobile Phone', value: 'mobilePhone'},
           {text: 'Home phone', value: 'homePhone'},
           {text: 'Address', value: 'address'},
           {text: 'Email', value: 'email'},
@@ -189,6 +196,9 @@
       this.loadContactList()
     },
     methods: {
+      clearContact () {
+        this.contact = {}
+      },
       updateSelection () {
         this.selected = [];
 

@@ -45,15 +45,23 @@
                   :disabled="loading"
                 />
               </v-flex>
+              <v-select
+                label="Country"
+                v-model="country"
+                :items="countries"
+                @change="updateMask"
+              />
 
               <v-flex xs12>
                 <v-text-field
                   label="Mobile phone"
                   v-model="mobilePhone"
                   :rules="mobilePhoneRules"
-                  type="number"
+                  type="tel"
                   :disabled="loading"
                   required
+                  :mask="phoneMasks[country]"
+                  :hint="phoneMasks[country]"
                 />
               </v-flex>
 
@@ -62,8 +70,10 @@
                   label="Home phone"
                   v-model="homePhone"
                   :rules="homePhoneRules"
-                  type="number"
                   :disabled="loading"
+                  :mask="phoneMasks[country]"
+                  :hint="phoneMasks[country]"
+                  type="tel"
                 />
               </v-flex>
 
@@ -80,7 +90,6 @@
                 <v-text-field
                   label="Email"
                   v-model="email"
-                  type="email"
                   :rules="emailRules"
                   :disabled="loading"
                 />
@@ -104,6 +113,7 @@
 <script>
   const api_url = 'https://vuejs-phone-book.herokuapp.com/';
   import tokenService from '@/services/token'
+  import phoneMasks from '@/phoneMasks'
 
   export default {
     data: () => ({
@@ -112,7 +122,9 @@
       middlename: "",
       lastname: "",
       address: "",
+      phoneMasks: phoneMasks,
       email: "",
+      country: 'Australia',
       homePhone: "",
       mobilePhone: "",
       loading: false,
@@ -128,6 +140,15 @@
       ]
     }),
     computed: {
+      countries () {
+        let countries = [];
+
+        for (let c in this.phoneMasks) {
+          countries.push(c)
+        }
+
+        return countries
+      },
       lastnameRules () {
         if (this.lastname) {
           return [
@@ -173,6 +194,14 @@
       }
     },
     methods: {
+      updateMask () {
+        if (this.country) {
+          setTimeout(() => {
+            this.homePhone = this.phoneMasks[this.country].replace(/#/g, '');
+            this.mobilePhone = this.phoneMasks[this.country].replace(/#/g, '');
+          }, 50)
+        }
+      },
       close() {
         this.modal = false;
         this.clean();
@@ -184,6 +213,7 @@
         this.lastname = "";
         this.middlename = "";
         this.address = "";
+        this.country = "";
         this.email = "";
         this.homePhone = "";
         this.mobilePhone = ""
@@ -199,6 +229,7 @@
           form.append('firstname', this.firstname);
           form.append('lastname', this.lastname);
           form.append('middlename', this.middlename);
+          form.append('country', this.country);
           form.append('address', this.address);
           form.append('email', this.email);
           form.append('homePhone', this.homePhone);

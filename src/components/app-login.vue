@@ -118,7 +118,7 @@
         this.$store.dispatch('login', {
           credentials: this.credentials,
           formData: formData,
-          redirect: 'test'
+          redirect: 'contacts'
         })
           .then(() => {
             this.loading = false;

@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import test from '@/pages/test'
+import contactList from '@/pages/contactList'
 import welcome from '@/pages/welcome'
 import store from '../store'
 import tokenservice from '@/services/token'
@@ -15,8 +15,12 @@ const router = new Router({
       component: welcome
     },
     {
-      path: '/test',
-      component: test,
+      path: '*',
+      redirect: '/'
+    },
+    {
+      path: '/contacts',
+      component: contactList,
       meta: {
         requireAuth: true,
       }
