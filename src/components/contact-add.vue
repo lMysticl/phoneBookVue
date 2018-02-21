@@ -106,7 +106,7 @@
 
   const addressRegex = /[A-Za-z0-9'\.\-\s\,]/;
 
-  const phoneNumber =/^[0-9\+]{1,}[0-9\-]{3,15}$/;
+  const phoneNumber =/^(\(?\+?[0-9]*\)?)?[0-9_\- \(\)]*$/;
 
   const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
 
