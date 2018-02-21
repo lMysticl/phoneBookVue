@@ -14,7 +14,7 @@
 
       <v-divider/>
 
-      <v-card-text >
+      <v-card-text>
 
 
         <v-form v-model="valid" ref="form" lazy-validation>
@@ -97,8 +97,18 @@
 
 <script>
   const api_url = 'https://vuejs-phone-book.herokuapp.com/';
+
   import tokenService from '@/services/token'
+
   import phoneMasks from '@/phoneMasks'
+
+  const nameRegex = /^[a-zA-Z\\s]*$/;
+
+  const addressRegex = /[A-Za-z0-9'\.\-\s\,]/;
+
+  const phoneNumber =/^[0-9\+]{1,}[0-9\-]{3,15}$/;
+
+  const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
 
   export default {
     data: () => ({
@@ -113,15 +123,15 @@
       loading: false,
       firstnameRules: [
         v => !!v || 'This field is required',
-        v => (v && v.length > 2) || 'This field must be more then two characters',
+        v => (v && v.length > 2) && nameRegex.test(v) || 'This field must be more then two characters and only letters',
       ],
       mobilePhoneRules: [
         v => !!v || 'This field is required',
-        v => (v && v.length > 2) || 'This field must be more then two characters',
+        v => (v && v.length > 8) && phoneNumber.test(v) || 'This field must be more then eight numbers',
       ]
     }),
     computed: {
-      countries () {
+      countries() {
         let countries = [];
 
         for (let c in this.phoneMasks) {
@@ -130,39 +140,40 @@
 
         return countries
       },
-      lastnameRules () {
+      lastnameRules() {
         if (this.lastname) {
+
           return [
-            v => (v && v.length > 2) || 'This field must be more then two characters',
+            v => (v && v.length > 2) && nameRegex.test(v) || 'This field must be more then two characters and only letters',
           ]
         }
       },
 
-      addressRules () {
+      addressRules() {
         if (this.address) {
           return [
-            v => (v && v.length > 2) || 'This field must be more then two characters',
+            v => (v && v.length > 2) && addressRegex.test(v) || 'This field must be more then two characters',
           ]
         }
       },
-      emailRules () {
+      emailRules() {
         if (this.email) {
           return [
-            v => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid',
+            v => emailRegex.test(v) || 'E-mail must be valid',
           ]
         }
       },
       valid: {
-        get () {
+        get() {
           return !!this.firstname && !!this.mobilePhone
         },
-        set (v)  {
+        set(v) {
 
         }
       }
     },
     methods: {
-      updateMask () {
+      updateMask() {
         if (this.country) {
           setTimeout(() => {
 
@@ -190,7 +201,7 @@
         this.modal = true
       },
       save() {
-        if(this.$refs.form.validate()){
+        if (this.$refs.form.validate()) {
           let form = new FormData();
 
           form.append('firstname', this.firstname);

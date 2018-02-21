@@ -67,7 +67,7 @@
                   prepend-icon="lock_open"
                   name="input-10-2"
                   label="Enter your password"
-                  hint="At least 4 characters"
+                  hint="At least 5 characters"
                   required
                   min="4"
                   :append-icon="e3 ? 'visibility' : 'visibility_off'"
@@ -95,6 +95,10 @@
 
 <script>
 
+  const nameRegex = /^[a-zA-Z\\s]*$/;
+
+  const login = /^[a-zA-Z0-9]*$/;
+
 
   export default {
     props: {
@@ -109,7 +113,7 @@
       password: 'Password',
       usernameRules: [
         v => !!v || 'This field is required',
-        v => (v && v.length > 2) || 'This field must be more then two characters',
+        v => (v && v.length > 2) && login.test(v) || 'This field must be more then two characters ',
       ],
       passwordRules: [
         v => !!v || 'This field is required',
@@ -165,7 +169,7 @@
       firstnameRules () {
         if (this.register.firstname) {
           return [
-            v => (v && v.length > 2) || 'This field must be more then two characters',
+            v => (v && v.length > 2) && nameRegex.test(v) || 'This field must be more then two characters and only letters',
           ]
         }
       },

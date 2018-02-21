@@ -7,7 +7,7 @@
 
       <v-divider/>
 
-      <v-card-text >
+      <v-card-text>
 
 
         <v-alert
@@ -92,7 +92,8 @@
       <v-card-actions>
         <v-spacer/>
         <v-btn color="blue darken-1" flat @click.native="close" :disabled="loading">Close</v-btn>
-        <v-btn color="blue darken-1" flat @click.native="save" :disabled="!valid || ! update" :loading="loading">Save</v-btn>
+        <v-btn color="blue darken-1" flat @click.native="save" :disabled="!valid || ! update" :loading="loading">Save
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -103,6 +104,15 @@
   import phoneMasks from '@/phoneMasks'
 
   const api_url = 'https://vuejs-phone-book.herokuapp.com/';
+
+  const nameRegex = /^[a-zA-Z\\s]*$/;
+
+  const addressRegex = /[A-Za-z0-9'\.\-\s\,]/;
+
+  const phoneNumber =/^[0-9\+]{1,}[0-9\-]{3,15}$/;
+
+  const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+
 
   export default {
     props: ['contact'],
@@ -121,15 +131,17 @@
       mobilePhone: "",
       firstnameRules: [
         v => !!v || 'This field is required',
-        v => (v && v.length > 2) || 'This field must be more then two characters',
+
+        v => (v && v.length > 2) && nameRegex.test(v) || 'This field must be more then two characters and only letters',
       ],
       mobilePhoneRules: [
         v => !!v || 'This field is required',
-        v => (v && v.length > 2) || 'This field must be more then two characters',
+        v => (v && v.length > 8)  && phoneNumber.test(v) || 'This field must be more eight two numbers and only numbers',
       ]
     }),
     computed: {
-      countries () {
+      countries() {
+
         let countries = [];
 
         for (let c in this.phoneMasks) {
@@ -140,30 +152,32 @@
       },
       lastnameRules() {
         if (this.lastname) {
+
           return [
-            v => (v && v.length > 2) || 'This field must be more then two characters',
+            v => (v && v.length > 2) && nameRegex.test(v) || 'This field must be more then two characters and only letters',
           ]
         }
       },
       addressRules() {
         if (this.address) {
+
           return [
-            v => (v && v.length > 2) || 'This field must be more then two characters',
+            v => (v && v.length > 2) && addressRegex.test(v) || 'This field must be more then two characters',
           ]
         }
       },
       emailRules() {
         if (this.email) {
           return [
-            v => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid',
+            v => emailRegex.test(v) || 'E-mail must be valid',
           ]
         }
       },
-      update () {
+      update() {
         return this.contact.firstname !== this.firstname ||
-          this.contact.lastname !== this.lastname||
-          this.contact.address !== this.address||
-          this.contact.email !== this.email||
+          this.contact.lastname !== this.lastname ||
+          this.contact.address !== this.address ||
+          this.contact.email !== this.email ||
           this.contact.mobilePhone !== this.mobilePhone
 
       },
@@ -173,59 +187,60 @@
         },
         set(v) {
         }
-      }},
-      methods: {
-        updateMask () {
-          if (this.country) {
-            setTimeout(() => {
-              this.mobilePhone = this.phoneMasks[this.country].replace(/#/g, '');
-            }, 50)
-          }
-        },
-        clearError () {
-          this.errorMessage = null
-        },
-        setValues() {
-          this.contactId = this.contact.contactId;
-          this.firstname = this.contact.firstname;
-          this.lastname = this.contact.lastname;
-          this.country = this.contact.country;
-          this.address = this.contact.address;
-          this.email = this.contact.email;
-          this.mobilePhone = this.contact.mobilePhone;
+      }
+    },
+    methods: {
+      updateMask() {
+        if (this.country) {
+          setTimeout(() => {
+            this.mobilePhone = this.phoneMasks[this.country].replace(/#/g, '');
+          }, 50)
+        }
+      },
+      clearError() {
+        this.errorMessage = null
+      },
+      setValues() {
+        this.contactId = this.contact.contactId;
+        this.firstname = this.contact.firstname;
+        this.lastname = this.contact.lastname;
+        this.country = this.contact.country;
+        this.address = this.contact.address;
+        this.email = this.contact.email;
+        this.mobilePhone = this.contact.mobilePhone;
 
-          this.$refs.mobilePhone.focus();
-          this.$refs.mobilePhone.blur();
-        },
-        close() {
-          this.modal = false;
-          this.clean();
-          this.clearError();
-          this.$emit('close')
-        },
-        clean() {
-          this.$refs.form.reset();
-          this.firstname = "";
-          this.lastname = "";
-          this.country = "";
-          this.address = "";
-          this.email = "";
-          this.mobilePhone = ""
-        },
-        open() {
-          this.modal = true
-        },
-        save() {
-          if(this.$refs.form.validate()){
+        this.$refs.mobilePhone.focus();
+        this.$refs.mobilePhone.blur();
+      },
+      close() {
+        this.modal = false;
+        this.clean();
+        this.clearError();
+        this.$emit('close')
+      },
+      clean() {
+        this.$refs.form.reset();
+        this.firstname = "";
+        this.lastname = "";
+        this.country = "";
+        this.address = "";
+        this.email = "";
+        this.mobilePhone = ""
+      },
+      open() {
+        this.modal = true
+      },
+      save() {
+        if (this.$refs.form.validate()) {
           let form = new FormData();
 
           form.append('contactId', this.contactId);
           form.append('firstname', this.firstname);
           form.append('lastname', this.lastname);
-            form.append('country', this.country);
-            form.append('address', this.address);
-            form.append('email', this.email);
-            form.append('mobilePhone', this.mobilePhone);
+          form.append('country', this.country);
+          form.append('address', this.address);
+          form.append('email', this.email);
+          form.append('mobilePhone', this.mobilePhone);
 
           this.loading = true;
 
@@ -246,17 +261,17 @@
 
           })
         }
-        }
-      },
-      watch: {
-        contact(v) {
-          if (Object.keys(v).length) {
-            this.open();
-            this.setValues();
-          }
+      }
+    },
+    watch: {
+      contact(v) {
+        if (Object.keys(v).length) {
+          this.open();
+          this.setValues();
         }
       }
     }
+  }
 
 </script>
 
