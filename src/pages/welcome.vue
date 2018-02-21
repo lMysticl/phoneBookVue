@@ -10,9 +10,12 @@
               <v-flex>
                 <h3 class="display-3" dark>Welcome to the Phone Book app</h3>
                 <span class="subheading"><p>
-                   <br>
-                 <b>Opportunities and functions.</b>
                     <br>
+                    <b>Opportunities and functions.</b>
+                    <br>
+                  - Mobile view
+                   <br>
+                  <br>
                   - Authorization
                    <br>
                  - Registration
