@@ -18,7 +18,7 @@
           transition= "scale-transition"
           outline
         >
-          In the first request to the Heroku server, there can be delays which disappear in next request.
+          In the first request to the Heroku server, there can be delays. Which disappear in next request.
         </v-alert>
 
         <v-alert

@@ -61,17 +61,6 @@
 
               <v-flex xs12>
                 <v-text-field
-                  id="middlename"
-                  label="Middle name"
-                  v-model="register.middlename"
-                  prepend-icon="person"
-                  :rules="middlenameRules"
-                  :disabled="loading"
-                />
-              </v-flex>
-
-              <v-flex xs12>
-                <v-text-field
                   id="reg_password"
                   v-model="register.password"
                   type="password"
@@ -140,7 +129,6 @@
         this.$refs.form.reset();
         this.register.username = "";
         this.register.password = "";
-        this.register.middlename = "";
         this.register.firstname = "";
       },
       clearInfo() {
@@ -159,7 +147,6 @@
 
           })
           .catch((error) => {
-            console.log(error);
             this.error = true;
             this.errorMessage = error.body.message;
             this.loading = false;
@@ -170,13 +157,6 @@
     },
 
     computed: {
-      middlenameRules () {
-        if (this.register.middlename) {
-          return [
-            v => (v && v.length > 2) || 'This field must be more then two characters',
-          ]
-        }
-      },
 
       info() {
         return this.$store.getters.infoShowed

@@ -14,7 +14,20 @@
 
       <v-divider/>
 
-      <v-card-text style="max-height: 400px">
+      <v-card-text >
+
+        <v-alert
+          @input="clearError"
+          type="error"
+          dismissible
+          v-model="error"
+          transition="scale-transition"
+        >
+          {{ errorMessage }}
+        </v-alert>
+
+
+
         <v-form v-model="valid" ref="form" lazy-validation>
           <v-container grid-list-md>
             <v-layout wrap>
@@ -37,14 +50,7 @@
                 />
               </v-flex>
 
-              <v-flex xs12>
-                <v-text-field
-                  label="Middle name"
-                  v-model="middlename"
-                  :rules="middlenameRules"
-                  :disabled="loading"
-                />
-              </v-flex>
+
               <v-select
                 label="Country"
                 v-model="country"
@@ -60,22 +66,12 @@
                   type="tel"
                   :disabled="loading"
                   required
+                  return-masked-value
                   :mask="phoneMasks[country]"
                   :hint="phoneMasks[country]"
                 />
               </v-flex>
 
-              <v-flex xs12>
-                <v-text-field
-                  label="Home phone"
-                  v-model="homePhone"
-                  :rules="homePhoneRules"
-                  :disabled="loading"
-                  :mask="phoneMasks[country]"
-                  :hint="phoneMasks[country]"
-                  type="tel"
-                />
-              </v-flex>
 
               <v-flex xs12>
                 <v-text-field
@@ -119,17 +115,15 @@
     data: () => ({
       modal: false,
       firstname: "",
-      middlename: "",
       lastname: "",
       address: "",
       phoneMasks: phoneMasks,
       email: "",
       country: 'Australia',
-      homePhone: "",
       mobilePhone: "",
       loading: false,
       error: false,
-      errorMessage: null,
+      errorMessage: "",
       firstnameRules: [
         v => !!v || 'This field is required',
         v => (v && v.length > 2) || 'This field must be more then two characters',
@@ -156,19 +150,8 @@
           ]
         }
       },
-      middlenameRules () {
-        if (this.middlename) {
-          return [
-            v => (v && v.length > 2) || 'This field must be more then two characters',
-          ]
-        }
-      },
-      homePhoneRules () {
-        if (this.homePhone) {
-          return [
-            v => (v && v.length > 2) || 'This field must be more then two characters',
-          ]
-        }
+      clearError () {
+        this.errorMessage = null
       },
       addressRules () {
         if (this.address) {
@@ -205,17 +188,15 @@
       close() {
         this.modal = false;
         this.clean();
-
+        this.clearError();
       },
       clean() {
         this.$refs.form.reset();
         this.firstname = "";
         this.lastname = "";
-        this.middlename = "";
         this.address = "";
         this.country = "";
         this.email = "";
-        this.homePhone = "";
         this.mobilePhone = ""
       },
 
@@ -228,11 +209,9 @@
 
           form.append('firstname', this.firstname);
           form.append('lastname', this.lastname);
-          form.append('middlename', this.middlename);
           form.append('country', this.country);
           form.append('address', this.address);
           form.append('email', this.email);
-          form.append('homePhone', this.homePhone);
           form.append('mobilePhone', this.mobilePhone);
 
           this.loading = true;
@@ -249,6 +228,10 @@
               this.$emit('update');
               this.clean();
             }).catch((error) => {
+            this.loading = false;
+          }).catch((error) => {
+            this.error = true;
+            this.errorMessage = error.body.message;
             this.loading = false;
           })
 

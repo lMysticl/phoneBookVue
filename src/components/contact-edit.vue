@@ -7,7 +7,19 @@
 
       <v-divider/>
 
-      <v-card-text style="max-height: 400px">
+      <v-card-text >
+
+
+        <v-alert
+          @input="clearError"
+          type="error"
+          dismissible
+          v-model="error"
+          transition="scale-transition"
+        >
+          {{ errorMessage }}
+        </v-alert>
+
 
         <v-form v-model="valid" ref="form" lazy-validation>
           <v-container grid-list-md>
@@ -30,20 +42,12 @@
                 />
               </v-flex>
 
-              <v-flex xs12>
-                <v-text-field
-                  label="Middle name"
-                  v-model="middlename"
-                  :rules="middlenameRules"
-                  :disabled="loading"
-                />
-              </v-flex>
 
               <v-select
                 label="Country"
                 v-model="country"
                 :items="countries"
-                @change="updateMask"
+                @input="updateMask"
               />
 
               <v-flex xs12>
@@ -53,24 +57,13 @@
                   ref="mobilePhone"
                   :rules="mobilePhoneRules"
                   :disabled="loading"
+                  return-masked-value
                   :mask="phoneMasks[country]"
                   :hint="phoneMasks[country]"
                   type="tel"
                 />
               </v-flex>
 
-              <v-flex xs12>
-                <v-text-field
-                  label="Home phone"
-                  v-model="homePhone"
-                  ref="homePhone"
-                  :rules="homePhoneRules"
-                  :disabled="loading"
-                  type="tel"
-                  :mask="phoneMasks[country]"
-                  :hint="phoneMasks[country]"
-                />
-              </v-flex>
 
               <v-flex xs12>
                 <v-text-field
@@ -115,16 +108,16 @@
     props: ['contact'],
     data: () => ({
       modal: false,
-      country: 'Australia',
+      country: '',
       phoneMasks: phoneMasks,
       loading: false,
       contactId: "",
       firstname: "",
-      middlename: "",
       lastname: "",
       address: "",
       email: "",
-      homePhone: "",
+      error: false,
+      errorMessage: "",
       mobilePhone: "",
       firstnameRules: [
         v => !!v || 'This field is required',
@@ -152,20 +145,6 @@
           ]
         }
       },
-      middlenameRules() {
-        if (this.middlename) {
-          return [
-            v => (v && v.length > 2) || 'This field must be more then two characters',
-          ]
-        }
-      },
-      homePhoneRules() {
-        if (this.homePhone) {
-          return [
-            v => (v && v.length > 2) || 'This field must be more then two characters',
-          ]
-        }
-      },
       addressRules() {
         if (this.address) {
           return [
@@ -182,11 +161,9 @@
       },
       update () {
         return this.contact.firstname !== this.firstname ||
-          this.contact.middlename !== this.middlename||
           this.contact.lastname !== this.lastname||
           this.contact.address !== this.address||
           this.contact.email !== this.email||
-          this.contact.homePhone !== this.homePhone||
           this.contact.mobilePhone !== this.mobilePhone
 
       },
@@ -206,29 +183,34 @@
             }, 50)
           }
         },
+        clearError () {
+          this.errorMessage = null
+        },
         setValues() {
           this.contactId = this.contact.contactId;
           this.firstname = this.contact.firstname;
-          this.middlename = this.contact.middlename;
           this.lastname = this.contact.lastname;
+          this.country = this.contact.country;
           this.address = this.contact.address;
           this.email = this.contact.email;
-          this.homePhone = this.contact.homePhone;
           this.mobilePhone = this.contact.mobilePhone;
+
+          this.$refs.mobilePhone.focus();
+          this.$refs.mobilePhone.blur();
         },
         close() {
           this.modal = false;
           this.clean();
+          this.clearError();
           this.$emit('close')
         },
         clean() {
           this.$refs.form.reset();
           this.firstname = "";
           this.lastname = "";
-          this.middlename = "";
+          this.country = "";
           this.address = "";
           this.email = "";
-          this.homePhone = "";
           this.mobilePhone = ""
         },
         open() {
@@ -241,11 +223,9 @@
           form.append('contactId', this.contactId);
           form.append('firstname', this.firstname);
           form.append('lastname', this.lastname);
-            form.append('middlename', this.middlename);
             form.append('country', this.country);
             form.append('address', this.address);
             form.append('email', this.email);
-            form.append('homePhone', this.homePhone);
             form.append('mobilePhone', this.mobilePhone);
 
           this.loading = true;
@@ -263,6 +243,8 @@
               this.clean();
             }).catch((error) => {
             this.loading = false;
+            this.errorMessage = error.body.message;
+            this.loading = false;
           })
         }
         }
@@ -271,7 +253,7 @@
         contact(v) {
           if (Object.keys(v).length) {
             this.open();
-            this.setValues()
+            this.setValues();
           }
         }
       }

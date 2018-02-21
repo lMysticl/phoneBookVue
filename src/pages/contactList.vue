@@ -5,19 +5,21 @@
         <v-card>
           <v-container fluid grid-list-md>
             <v-layout row wrap align-center>
-              <v-flex xs12 md7>
+              <v-flex xs12 md6>
                 <v-text-field box label="Search" v-model="search"/>
               </v-flex>
 
-              <v-flex xs12 md7>
+              <v-flex xs12 md6>
                 <contact-add @update="loadContactList"/>
 
-                <v-btn v-if="selected.length" :loading="deleting" color="red" dark @click="deleteSelectedContacts">Delete selected</v-btn>
+                <v-btn v-if="selected.length" :loading="deleting" color="red" dark @click="deleteSelectedContacts">
+                  Delete selected
+                </v-btn>
               </v-flex>
             </v-layout>
           </v-container>
 
-          <v-divider></v-divider>
+          <v-divider/>
 
           <v-data-table
             v-if="!isMobile"
@@ -42,10 +44,8 @@
                 <td class="text-xs-right">{{ props.item.contactId || '-' }}</td>
                 <td class="text-xs-right">{{ props.item.firstname || '-' }}</td>
                 <td class="text-xs-right">{{ props.item.lastname || '-' }}</td>
-                <td class="text-xs-right">{{ props.item.middlename || '-' }}</td>
                 <td class="text-xs-right">{{ props.item.country || '-' }}</td>
                 <td class="text-xs-right">{{ props.item.mobilePhone || '-' }}</td>
-                <td class="text-xs-right">{{ props.item.homePhone || '-' }}</td>
                 <td class="text-xs-right">{{ props.item.address || '-' }}</td>
                 <td class="text-xs-right">{{ props.item.email || '-' }}</td>
                 <td class="justify-center layout px-0">
@@ -81,51 +81,53 @@
               >
                 <v-card>
                   <v-list dense>
-                    <v-list-tile>
-                      <v-list-tile-content>Contact ID:</v-list-tile-content>
-                      <v-list-tile-content class="align-end">{{ props.item.contactId || '-'  }}</v-list-tile-content>
-                    </v-list-tile>
+
                     <v-list-tile>
                       <v-list-tile-content>First name:</v-list-tile-content>
-                      <v-list-tile-content class="align-end">{{ props.item.firstname || '-'  }}</v-list-tile-content>
-                    </v-list-tile>
-                    <v-list-tile>
-                      <v-list-tile-content>Last name:</v-list-tile-content>
-                      <v-list-tile-content class="align-end">{{ props.item.lastname || '-'  }}</v-list-tile-content>
-                    </v-list-tile>
-                    <v-list-tile>
-                      <v-list-tile-content>Middle name:</v-list-tile-content>
-                      <v-list-tile-content class="align-end">{{ props.item.middlename || '-'  }}</v-list-tile-content>
-                    </v-list-tile>
-                    <v-list-tile>
-                      <v-list-tile-content>Country:</v-list-tile-content>
-                      <v-list-tile-content class="align-end">{{ props.item.country || '-'  }}</v-list-tile-content>
+                      <v-list-tile-content class="align-end">{{ props.item.firstname || '-' }}</v-list-tile-content>
                     </v-list-tile>
 
                     <v-list-tile>
                       <v-list-tile-content>Mobile phone:</v-list-tile-content>
-                      <v-list-tile-content class="align-end">{{ props.item.mobilePhone || '-'  }}</v-list-tile-content>
+                      <v-list-tile-content class="align-end">{{ props.item.mobilePhone || '-' }}</v-list-tile-content>
                     </v-list-tile>
-                    <v-list-tile>
-                      <v-list-tile-content>Home phone:</v-list-tile-content>
-                      <v-list-tile-content class="align-end">{{ props.item.homePhone || '-'  }}</v-list-tile-content>
-                    </v-list-tile>
-                    <v-list-tile>
-                      <v-list-tile-content>Address:</v-list-tile-content>
-                      <v-list-tile-content class="align-end">{{ props.item.address || '-'  }}</v-list-tile-content>
-                    </v-list-tile>
-                    <v-list-tile>
-                      <v-list-tile-content>Email:</v-list-tile-content>
-                      <v-list-tile-content class="align-end">{{ props.item.email || '-'  }}</v-list-tile-content>
-                    </v-list-tile>
+
+                    <expantion-panel>
+
+                      <v-list-tile>
+                        <v-list-tile-content>Last name:</v-list-tile-content>
+                        <v-list-tile-content class="align-end">{{ props.item.lastname || '-' }}</v-list-tile-content>
+                      </v-list-tile>
+
+                      <v-list-tile>
+                        <v-list-tile-content>Country:</v-list-tile-content>
+                        <v-list-tile-content class="align-end">{{ props.item.country || '-' }}</v-list-tile-content>
+                      </v-list-tile>
+
+                      <v-list-tile>
+                        <v-list-tile-content>Address:</v-list-tile-content>
+                        <v-list-tile-content class="align-end">{{ props.item.address || '-' }}</v-list-tile-content>
+                      </v-list-tile>
+
+                      <v-list-tile>
+                        <v-list-tile-content>Email:</v-list-tile-content>
+                        <v-list-tile-content class="align-end">{{ props.item.email || '-' }}</v-list-tile-content>
+                      </v-list-tile>
+
+                      <v-list-tile>
+                        <v-list-tile-content>Contact ID:</v-list-tile-content>
+                        <v-list-tile-content class="align-end">{{ props.item.contactId || '-' }}</v-list-tile-content>
+                      </v-list-tile>
+
+                    </expantion-panel>
                   </v-list>
 
-                  <v-divider></v-divider>
+                  <v-divider/>
 
                   <v-card-actions align-center>
-                    <v-checkbox @change="updateSelection" v-model="checkboxes[props.item.contactId]" hide-details></v-checkbox>
+                    <v-checkbox @change="updateSelection" v-model="checkboxes[props.item.contactId]" hide-details/>
 
-                    <v-spacer></v-spacer>
+                    <v-spacer/>
 
                     <v-btn :disabled="deleting" icon class="mx-0" @click="selectContact(props.item.contactId)">
                       <v-icon color="teal">edit</v-icon>
@@ -159,11 +161,14 @@
   import tokenService from '@/services/token'
   import contactEdit from '@/components/contact-edit'
   import contactAdd from '@/components/contact-add'
+  import expantionPanel from '@/components/expantion-panel'
+
 
   export default {
     components: {
       contactEdit,
-      contactAdd
+      contactAdd,
+      expantionPanel
     },
     data() {
       return {
@@ -178,16 +183,14 @@
           rowsPerPage: 10
         },
         headers: [
-          {text: 'ID', align: 'left', value: 'contactId'},
-          {text: 'First Name', value: 'firstname'},
-          {text: 'Last Name', value: 'lastname'},
-          {text: 'Middle Name', value: 'middlename'},
-          {text: 'Country', value: 'country'},
-          {text: 'Mobile Phone', value: 'mobilePhone'},
-          {text: 'Home phone', value: 'homePhone'},
-          {text: 'Address', value: 'address'},
-          {text: 'Email', value: 'email'},
-          {text: 'Actions', value: 'name', sortable: false}
+          {text: 'ID', align: 'right', value: 'contactId'},
+          {text: 'First Name', align: 'right', value: 'firstname'},
+          {text: 'Last Name', align: 'right', value: 'lastname'},
+          {text: 'Country', align: 'right', value: 'country'},
+          {text: 'Mobile Phone', align: 'right', value: 'mobilePhone'},
+          {text: 'Address', align: 'right', value: 'address'},
+          {text: 'Email', align: 'right', value: 'email'},
+          {text: 'Actions', align: 'right', value: 'name', sortable: false}
         ],
         contacts: []
       }
@@ -196,10 +199,10 @@
       this.loadContactList()
     },
     methods: {
-      clearContact () {
+      clearContact() {
         this.contact = {}
       },
-      updateSelection () {
+      updateSelection() {
         this.selected = [];
 
         for (let k in this.checkboxes) {
@@ -270,12 +273,12 @@
           })
           .catch(err => {
             this.deleting = false;
-        })
+          })
       }
     },
 
     computed: {
-      isMobile () {
+      isMobile() {
         return this.$vuetify.breakpoint.mdAndDown
       },
       pages() {
@@ -288,7 +291,7 @@
     },
 
     watch: {
-      isMobile (v) {
+      isMobile(v) {
         this.selected = [];
         this.checkboxes = {};
       }
