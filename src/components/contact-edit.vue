@@ -178,7 +178,6 @@
         updateMask () {
           if (this.country) {
             setTimeout(() => {
-              this.homePhone = this.phoneMasks[this.country].replace(/#/g, '');
               this.mobilePhone = this.phoneMasks[this.country].replace(/#/g, '');
             }, 50)
           }
@@ -244,7 +243,7 @@
             }).catch((error) => {
             this.loading = false;
             this.errorMessage = error.body.message;
-            this.loading = false;
+
           })
         }
         }

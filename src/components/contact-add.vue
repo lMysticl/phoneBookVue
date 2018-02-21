@@ -16,17 +16,6 @@
 
       <v-card-text >
 
-        <v-alert
-          @input="clearError"
-          type="error"
-          dismissible
-          v-model="error"
-          transition="scale-transition"
-        >
-          {{ errorMessage }}
-        </v-alert>
-
-
 
         <v-form v-model="valid" ref="form" lazy-validation>
           <v-container grid-list-md>
@@ -122,8 +111,6 @@
       country: 'Australia',
       mobilePhone: "",
       loading: false,
-      error: false,
-      errorMessage: "",
       firstnameRules: [
         v => !!v || 'This field is required',
         v => (v && v.length > 2) || 'This field must be more then two characters',
@@ -150,9 +137,7 @@
           ]
         }
       },
-      clearError () {
-        this.errorMessage = null
-      },
+
       addressRules () {
         if (this.address) {
           return [
@@ -180,7 +165,7 @@
       updateMask () {
         if (this.country) {
           setTimeout(() => {
-            this.homePhone = this.phoneMasks[this.country].replace(/#/g, '');
+
             this.mobilePhone = this.phoneMasks[this.country].replace(/#/g, '');
           }, 50)
         }
@@ -188,7 +173,8 @@
       close() {
         this.modal = false;
         this.clean();
-        this.clearError();
+
+
       },
       clean() {
         this.$refs.form.reset();
@@ -228,10 +214,7 @@
               this.$emit('update');
               this.clean();
             }).catch((error) => {
-            this.loading = false;
-          }).catch((error) => {
-            this.error = true;
-            this.errorMessage = error.body.message;
+
             this.loading = false;
           })
 
