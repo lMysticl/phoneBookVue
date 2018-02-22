@@ -1,7 +1,8 @@
 <template>
 
   <div>
-    <slot v-if="show"></slot>
+    <slot v-if="show"/>
+
     <div>
       <v-btn block color="grey darken-2" @click="show = !show">{{ show? 'hide': 'show' }}</v-btn>
     </div>

@@ -13,7 +13,7 @@
                 <contact-add @update="loadContactList"/>
 
                 <v-btn v-if="selected.length" :loading="deleting" color="red" dark @click="deleteSelectedContacts">
-                  Delete selected
+                  Delete selected ({{ selected.length }})
                 </v-btn>
               </v-flex>
             </v-layout>
@@ -79,9 +79,8 @@
                 md3
                 lg3
               >
-                <v-card>
+                <v-card hover>
                   <v-list dense>
-
                     <v-list-tile>
                       <v-list-tile-content>First name:</v-list-tile-content>
                       <v-list-tile-content class="align-end">{{ props.item.firstname || '-' }}</v-list-tile-content>
@@ -179,6 +178,7 @@
         search: null,
         rowsPerPageItems: [4, 8, 12],
         checkboxes: {},
+
         pagination: {
           rowsPerPage: 10
         },
@@ -208,7 +208,6 @@
         for (let k in this.checkboxes) {
           if (this.checkboxes[k]) {
             const contact = this.contacts.find(el => (el.contactId == k));
-            console.log(contact);
             this.selected.push(contact)
           }
         }

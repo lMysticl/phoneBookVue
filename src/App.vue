@@ -188,6 +188,8 @@
 <style>
   .content--wrap {
     background-image: url("/static/material-wallpaper-2560x1024.jpg");
+    background-attachment: fixed;
+    background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
   }

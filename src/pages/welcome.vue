@@ -1,45 +1,42 @@
 <template>
-  <v-container>
-    <v-layout justify-center>
+  <v-container fill-height>
+    <v-layout justify-center align-center>
       <v-flex style="max-width: 1150px">
-        <v-jumbotron
-          height="500px"
-        >
-          <v-container fill-height>
-            <v-layout align-center>
-              <v-flex>
-                <h3 class="display-3" dark>Welcome to the Phone Book app</h3>
-                <span class="subheading"><p>
-                    <br>
-                    <b>Opportunities and functions.</b>
-                    <br>
-                    - Mobile view
-                   <br>
-                    - Authorization
-                   <br>
-                    - Registration
-                   <br>
-                    - Save update sort search contacts.
-                   <br>
-                    - This page is fully adaptable, for different screen sizes.
-                   <br>
-                  <br>
-                  <b>For check real data you can you test user:</b>
-                  <br>
-                 <b>Login: </b>test
-                  <br>
-                 <b>Password: </b>12345
+        <v-card>
+          <v-card-title>
+            <h1 class="display-2" dark>Welcome to the Phone Book app</h1>
+          </v-card-title>
 
+         <v-card-text style="font-size: 16px;">
+           <div class="mb-2">
+             <b>Opportunities and functions:</b>
+           </div>
 
-</p></span>
-                <v-divider class="my-3"/>
-                <div class="title mb-3">Check more on Github!</div>
-                <v-btn large color="primary" href="https://github.com/lMysticl" target="_blank" class="mx-0">See more
-                </v-btn>
-              </v-flex>
-            </v-layout>
-          </v-container>
-        </v-jumbotron>
+           <ul class="pl-4">
+             <li>Mobile view</li>
+             <li>Authorization</li>
+             <li>Registration</li>
+             <li>Save update sort search contacts</li>
+             <li>This page is fully adaptable, for different screen sizes</li>
+           </ul>
+
+           <div class="my-2">
+             <b>For check real data you can use test user:</b>
+           </div>
+
+           <ul class="pl-4">
+             <li><b>Login: test</b></li>
+             <li><b>Password: 12345</b></li>
+           </ul>
+         </v-card-text>
+
+          <v-divider/>
+
+          <v-card-text>
+            <div class="title mb-3">Check more on Github!</div>
+            <v-btn large color="primary" href="https://github.com/lMysticl" target="_blank" class="mx-0">See more</v-btn>
+          </v-card-text>
+        </v-card>
       </v-flex>
     </v-layout>
   </v-container>
@@ -52,10 +49,10 @@
 </script>
 
 <style scoped>
-  .child-flex>*, .flex {
+  .child-flex > *, .flex {
 
     color: #000000;
-    background: #ECEFF1 ;
+    background: #ECEFF1;
     opacity: 0.82;
     filter: alpha(Opacity=20);
   }
