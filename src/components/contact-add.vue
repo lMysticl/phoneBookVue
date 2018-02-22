@@ -102,9 +102,9 @@
 
   import phoneMasks from '@/phoneMasks'
 
-  const nameRegex = /^[a-zA-Z\\s]*$/;
+  const nameRegex = /^[а-яА-ЯёЁa-zA-Z\\s]{3,40}$/;
 
-  const addressRegex = /[A-Za-z0-9'\.\-\s\,]/;
+  const addressRegex = /[а-яА-ЯёЁA-Za-z0-9'\.\-\s\,]/;
 
   const phoneNumber =/^(\(?\+?[0-9]*\)?)?[0-9_\- \(\)]*$/;
 

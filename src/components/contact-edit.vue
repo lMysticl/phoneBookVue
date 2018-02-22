@@ -107,7 +107,7 @@
 
   const nameRegex = /^[a-zA-Z\\s]*$/;
 
-  const addressRegex = /[A-Za-z0-9'\.\-\s\,]/;
+  const addressRegex = /[а-яА-ЯёЁA-Za-z0-9'\.\-\s\,]/;
 
   const phoneNumber =/^(\(?\+?[0-9]*\)?)?[0-9_\- \(\)]*$/;
 
