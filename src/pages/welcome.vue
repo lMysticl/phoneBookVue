@@ -13,16 +13,24 @@
                     <br>
                     <b>Opportunities and functions.</b>
                     <br>
-                  - Mobile view
+                    - Mobile view
+                   <br>
+                    - Authorization
+                   <br>
+                    - Registration
+                   <br>
+                    - Save update sort search contacts.
+                   <br>
+                    - And this page is fully adaptable, for different screen sizes.
                    <br>
                   <br>
-                  - Authorization
-                   <br>
-                 - Registration
-                   <br>
-                 - Save update sort search contacts.
-                   <br>
-                 - And this page is fully adaptable, for different screen sizes.
+                  <b>For check real data you can you test user:</b>
+                  <br>
+                 <b>Login: </b>test
+                  <br>
+                 <b>Password: </b>12345
+
+
 </p></span>
                 <v-divider class="my-3"/>
                 <div class="title mb-3">Check more on Github!</div>
@@ -44,5 +52,11 @@
 </script>
 
 <style scoped>
+  .child-flex>*, .flex {
 
+    color: #000000;
+    background: #ECEFF1 ;
+    opacity: 0.82;
+    filter: alpha(Opacity=20);
+  }
 </style>
