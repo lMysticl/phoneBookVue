@@ -21,7 +21,7 @@
                    <br>
                     - Save update sort search contacts.
                    <br>
-                    - And this page is fully adaptable, for different screen sizes.
+                    - This page is fully adaptable, for different screen sizes.
                    <br>
                   <br>
                   <b>For check real data you can you test user:</b>

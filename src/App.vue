@@ -1,7 +1,6 @@
 <template>
   <v-app
     dark
-    src="http://oxygennacdn3.oxygenna.com/wp-content/uploads/2015/11/18.jpg"
   >
     <v-navigation-drawer
       v-model="drawer"
@@ -115,11 +114,12 @@
 </template>
 
 <script>
+
   import appLogin from '@/components/app-login'
+
   import appRegistration from '@/components/registration'
 
   export default {
-    name: "welcome",
     components: {
       appLogin,
       appRegistration
