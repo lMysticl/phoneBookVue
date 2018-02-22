@@ -108,7 +108,7 @@
 
   const phoneNumber =/^(\(?\+?[0-9]*\)?)?[0-9_\- \(\)]*$/;
 
-  const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+  const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,4})+$/;
 
   export default {
     data: () => ({
