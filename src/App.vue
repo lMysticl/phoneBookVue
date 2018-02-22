@@ -49,6 +49,15 @@
             <v-list-tile-title>Contacts page</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
+        <v-list-tile avatar to="/">
+          <v-list-tile-avatar>
+            <v-icon>fa-sign-out</v-icon>
+          </v-list-tile-avatar>
+
+          <v-list-tile-content>
+            <v-list-tile-title>Phone Book</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
       </v-list>
     </v-navigation-drawer>
 
