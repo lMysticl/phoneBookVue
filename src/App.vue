@@ -1,7 +1,5 @@
 <template>
-  <v-app
-    dark
-  >
+  <v-app dark >
     <v-navigation-drawer
       v-model="drawer"
       fixed
