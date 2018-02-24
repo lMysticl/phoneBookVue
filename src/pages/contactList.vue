@@ -30,6 +30,7 @@
             select-all
             v-model="selected"
             item-key="contactId"
+            :totalItems="pagination.totalItems"
             :pagination.sync="pagination"
           >
             <template slot="items" slot-scope="props">
@@ -68,6 +69,7 @@
               wrap
               :search="search"
               :items="contacts"
+              :totalItems="pagination.totalItems"
               :rows-per-page-items="rowsPerPageItems"
               :pagination.sync="pagination"
             >
@@ -155,7 +157,7 @@
 
 
 <script>
-  const api_url = 'https://vuejs-phone-book.herokuapp.com/';
+  const api_url = 'http://localhost:8080/';
 
   import tokenService from '@/services/token'
   import contactEdit from '@/components/contact-edit'
@@ -180,7 +182,9 @@
         checkboxes: {},
 
         pagination: {
-          rowsPerPage: 10
+          sortBy: 'contactId',
+          rowsPerPage: 10,
+          page: 1
         },
         headers: [
           {text: 'ID', align: 'right', value: 'contactId'},
@@ -215,16 +219,25 @@
       loadContactList() {
         this.loading = true;
 
-        this.$http.get(api_url + 'contacts/get-all', {
-          headers: {
-            'Authorization': tokenService.getAuthHeader()
-          }
-        })
-          .then(response => {
-            this.contacts = response.body;
-            this.loading = false
+        const sortBy = this.pagination.sortBy;
+        const dir = this.pagination.descending ? 'ASC' : 'DESC';
+        const cursor = (this.pagination.page - 1) * this.pagination.rowsPerPage;
+        const offset = this.pagination.rowsPerPage > 0 ? this.pagination.rowsPerPage : this.pagination.totalItems;
+
+        this.$http.get(api_url + 'contacts/get-all',
+          {
+            headers: {'Authorization': tokenService.getAuthHeader()},
+            params: {sortBy, dir, cursor, offset}
           })
-      },
+          .then(response => {
+            this.contacts = response.body.contacts;
+            this.pagination.totalItems = response.body.count;
+            this.loading = false;
+          }).catch(error => {
+          console.log(error);
+          this.loading = false;
+      })
+              },
       selectContact(id) {
         this.contact = this.contacts.find(el => (el.contactId === id))
       },
@@ -278,7 +291,7 @@
 
     computed: {
       isMobile() {
-        return this.$vuetify.breakpoint.mdAndDown
+        return true //this.$vuetify.breakpoint.mdAndDown
       },
       pages() {
         if (this.pagination.rowsPerPage == null ||
@@ -293,6 +306,11 @@
       isMobile(v) {
         this.selected = [];
         this.checkboxes = {};
+      },
+      pagination: {
+        handler () {
+          // this.loadContactList()
+        }
       }
     }
   }
