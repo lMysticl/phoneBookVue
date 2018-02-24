@@ -15,9 +15,19 @@
       <v-divider/>
 
       <v-card-text>
+        <v-alert
+          @input="clearError"
+          type="error"
+          dismissible
+          v-model="error"
+          transition="scale-transition"
+        >
+          <div v-for="err in errors">
+            {{ err }}
+          </div>
+        </v-alert>
 
-
-        <v-form v-model="valid" ref="form" lazy-validation>
+        <v-form v-model="valid" ref="form">
           <v-container grid-list-md>
             <v-layout wrap>
               <v-flex xs12>
@@ -106,13 +116,16 @@
 
   const addressRegex = /[а-яА-ЯёЁA-Za-z0-9'\.\-\s\,]/;
 
-  const phoneNumber =/^(\(?\+?[0-9]*\)?)?[0-9_\- \(\)]*$/;
+  const phoneNumber = /^(\(?\+?[0-9]*\)?)?[0-9_\- \(\)]*$/;
 
   const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,4})+$/;
 
   export default {
     data: () => ({
       modal: false,
+      valid: false,
+      errors: [],
+      error: false,
       firstname: "",
       lastname: "",
       address: "",
@@ -162,17 +175,13 @@
             v => emailRegex.test(v) || 'E-mail must be valid',
           ]
         }
-      },
-      valid: {
-        get() {
-          return !!this.firstname && !!this.mobilePhone
-        },
-        set(v) {
-
-        }
       }
     },
     methods: {
+      clearError() {
+        this.errors = [];
+        this.error = false
+      },
       updateMask() {
         if (this.country) {
           setTimeout(() => {
@@ -184,8 +193,7 @@
       close() {
         this.modal = false;
         this.clean();
-
-
+        this.clearError();
       },
       clean() {
         this.$refs.form.reset();
@@ -224,11 +232,13 @@
               this.close();
               this.$emit('update');
               this.clean();
-            }).catch((error) => {
-
-            this.loading = false;
-          })
-
+            })
+            .catch((err) => {
+              this.clearError();
+              this.error = true;
+              this.loading = false;
+              this.errors = err.body.message.split(';').slice(0, -1);
+            })
         }
 
       }

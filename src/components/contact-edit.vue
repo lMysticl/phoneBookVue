@@ -8,8 +8,6 @@
       <v-divider/>
 
       <v-card-text>
-
-
         <v-alert
           @input="clearError"
           type="error"
@@ -17,11 +15,13 @@
           v-model="error"
           transition="scale-transition"
         >
-          {{ errorMessage }}
+          <div v-for="err in errors">
+            {{ err }}
+          </div>
         </v-alert>
 
 
-        <v-form v-model="valid" ref="form" lazy-validation>
+        <v-form v-model="valid" ref="form">
           <v-container grid-list-md>
             <v-layout wrap>
               <v-flex xs12>
@@ -100,7 +100,9 @@
 </template>
 
 <script>
+
   import tokenService from '@/services/token'
+
   import phoneMasks from '@/phoneMasks'
 
   const api_url = 'https://vuejs-phone-book.herokuapp.com/';
@@ -119,6 +121,10 @@
     data: () => ({
       modal: false,
       country: '',
+      valid: false,
+      errors: [],
+      error: false,
+
       phoneMasks: phoneMasks,
       loading: false,
       contactId: "",
@@ -126,9 +132,8 @@
       lastname: "",
       address: "",
       email: "",
-      error: false,
-      errorMessage: "",
       mobilePhone: "",
+
       firstnameRules: [
         v => !!v || 'This field is required',
 
@@ -180,13 +185,6 @@
           this.contact.email !== this.email ||
           this.contact.mobilePhone !== this.mobilePhone
 
-      },
-      valid: {
-        get() {
-          return !!this.firstname && !!this.mobilePhone
-        },
-        set(v) {
-        }
       }
     },
     methods: {
@@ -198,7 +196,8 @@
         }
       },
       clearError() {
-        this.errorMessage = null
+        this.errors = [];
+        this.error = false
       },
       setValues() {
         this.contactId = this.contact.contactId;
@@ -255,10 +254,12 @@
               this.close();
               this.$emit('update');
               this.clean();
-            }).catch((error) => {
-            this.loading = false;
-            this.errorMessage = error.body.message;
-
+            })
+            .catch((err) => {
+              this.clearError();
+              this.error = true;
+              this.loading = false;
+              this.errors = err.body.message.split(';').slice(0, -1);
           })
         }
       }
