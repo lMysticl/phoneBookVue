@@ -105,7 +105,7 @@
 
   import phoneMasks from '@/phoneMasks'
 
-  const api_url = 'https://vuejs-phone-book.herokuapp.com/';
+  const api_url = 'https://vuejs-phone-book-v1.herokuapp.com/';
 
   const nameRegex = /^[a-zA-Z\\s]*$/;
 
