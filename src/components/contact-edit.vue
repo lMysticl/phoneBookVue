@@ -137,7 +137,7 @@
       firstnameRules: [
         v => !!v || 'This field is required',
 
-        v => (v && v.length > 2) && nameRegex.test(v) || 'This field must be more then two characters and only letters',
+        v => (v && v.length > 2&& v.length <= 30) && nameRegex.test(v) || 'This field must be more then two characters and only letters',
       ],
       mobilePhoneRules: [
         v => !!v || 'This field is required',
@@ -159,7 +159,7 @@
         if (this.lastname) {
 
           return [
-            v => (v && v.length > 2) && nameRegex.test(v) || 'This field must be more then two characters and only letters',
+            v => (v && v.length > 2 && v.length <= 20) && nameRegex.test(v) || 'This field must be more then two characters and only letters',
           ]
         }
       },
@@ -167,14 +167,14 @@
         if (this.address) {
 
           return [
-            v => (v && v.length > 2) && addressRegex.test(v) || 'This field must be more then two characters',
+            v => (v && v.length > 2 && v.length <= 30) && addressRegex.test(v) || 'This field must be more then two characters',
           ]
         }
       },
       emailRules() {
         if (this.email) {
           return [
-            v => emailRegex.test(v) || 'E-mail must be valid',
+            v =>  emailRegex.test(v) || 'E-mail must be valid',
           ]
         }
       },
