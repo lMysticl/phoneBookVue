@@ -95,9 +95,9 @@
 
 <script>
 
-  const nameRegex = /^[a-zA-Z\\s]*$/;
+  const nameRegex = /^[a-zA-Zа-яА-ЯёЁ\\s]*$/;
 
-  const login = /^[a-zA-Z0-9]*$/;
+  const login = /^[a-zA-Zа-яА-ЯёЁ0-9]*$/;
 
 
   export default {
