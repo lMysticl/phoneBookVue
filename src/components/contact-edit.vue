@@ -107,7 +107,7 @@
 
   const api_url = 'https://vuejs-phone-book-v1.herokuapp.com/';
 
-  const nameRegex = /^[a-zA-Z\\s]*$/;
+  const nameRegex = /^[а-яА-ЯёЁa-zA-Z\\s]*$/;
 
   const addressRegex = /[а-яА-ЯёЁA-Za-z0-9'\.\-\s\,]/;
 
