@@ -179,7 +179,7 @@
 
 
 <script>
-  const api_url = 'https://vuejs-phone-book.herokuapp.com/';
+  const api_url = 'https://vue-java-phone-book.herokuapp.com/';
 
   import tokenService from '@/services/token'
   import contactEdit from '@/components/contact-edit'
