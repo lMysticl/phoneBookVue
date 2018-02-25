@@ -303,7 +303,7 @@
     computed: {
       sortList () {
         return this.headers.map(el => {
-          if(el.text !== 'action') return {text: el.text, value: el.value}
+          if(el.text !== 'Action') return {text: el.text, value: el.value}
         })
       },
       sortBy: {
