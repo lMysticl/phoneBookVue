@@ -106,7 +106,7 @@
 </template>
 
 <script>
-  const api_url = 'https://vue-java-phone-book.herokuapp.com/';
+  const api_url = 'https://vue-java-phone-book-v2.herokuapp.com/';
 
   import tokenService from '@/services/token'
 
