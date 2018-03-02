@@ -4,6 +4,7 @@ import contactList from '@/pages/contactList'
 import welcome from '@/pages/welcome'
 import store from '../store'
 import tokenservice from '@/services/token'
+import userEdit from '@/pages/user-edit'
 
 Vue.use(Router);
 
@@ -21,6 +22,13 @@ const router = new Router({
     {
       path: '/contacts',
       component: contactList,
+      meta: {
+        requireAuth: true,
+      }
+    },
+    {
+      path: '/user-edit',
+      component: userEdit,
       meta: {
         requireAuth: true,
       }

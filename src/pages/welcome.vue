@@ -4,7 +4,7 @@
       <v-flex style="max-width: 1150px">
         <v-card>
           <v-card-title>
-            <h1 class="display-2" dark>Welcome to the Phone Book app</h1>
+            <h1 class="display-2" dark>Welcome {{user.username ? user.username : 'User'}} to the Phone Book app</h1>
           </v-card-title>
 
          <v-card-text style="font-size: 16px;">
@@ -44,7 +44,12 @@
 
 <script>
   export default {
-    name: "welcome"
+    name: "welcome",
+    computed: {
+      user () {
+        return this.$store.getters.user
+      }
+    }
   }
 </script>
 

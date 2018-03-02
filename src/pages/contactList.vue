@@ -179,20 +179,21 @@
 
 
 <script>
-  const api_url = 'https://vue-java-phone-book-v2.herokuapp.com/';
+  const api_url = 'http://localhost:8080/';
 
   import tokenService from '@/services/token'
   import contactEdit from '@/components/contact-edit'
   import contactAdd from '@/components/contact-add'
   import expantionPanel from '@/components/expantion-panel'
 
-
   export default {
+
     components: {
       contactEdit,
       contactAdd,
       expantionPanel
     },
+
     data() {
       return {
         contact: {},
@@ -219,9 +220,11 @@
         contacts: []
       }
     },
+
     created() {
       this.loadContactList()
     },
+
     methods: {
       clearContact() {
         this.contact = {}
@@ -336,6 +339,7 @@
         this.checkboxes = {};
       }
     }
+
   }
 </script>
 

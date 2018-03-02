@@ -62,8 +62,8 @@
       <v-divider/>
       <v-card-actions>
         <v-spacer/>
-        <v-btn color="blue darken-1" @click="close" flat :disabled="loading">close</v-btn>
-        <v-btn color="blue darken-1" @click="login" flat :loading="loading">login</v-btn>
+        <v-btn color="blue darken-1" @click="close" tabindex="1" flat :disabled="loading">close</v-btn>
+        <v-btn color="blue darken-1" @click="login" tabindex="0" flat :loading="loading">login</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

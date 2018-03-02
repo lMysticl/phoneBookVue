@@ -6,9 +6,13 @@ import tokenService from '@/services/token'
 
 Vue.use(Vuex);
 
-const api_url = 'https://vue-java-phone-book-v2.herokuapp.com/';
+const api_url = 'http://localhost:8080/';
 const login_url = api_url + 'oauth/token';
-const registration_url = api_url + "api/register";
+const registration_url = api_url + "/register";
+const profile_edit_url = api_url + "api/profile/edit";
+const profile_url = api_url + 'api/profile';
+const changePasswordURL = api_url + "api/profile/change-password";
+
 
 
 function b64EncodeUnicode(str) {
@@ -28,7 +32,7 @@ export default new Vuex.Store({
   },
   getters: {
     user(state) {
-      return state.user
+      return state.user || {}
     },
     infoShowed(state) {
       return state.info
@@ -88,11 +92,54 @@ export default new Vuex.Store({
           return true
         })
     },
+
+    updateProfile({commit}, {credentials, data, redirect}) {
+      return Vue.http.post(
+        profile_edit_url,
+        data,
+        {
+          headers: {
+            'Authorization': tokenService.getAuthHeader()
+          }
+        }
+      )
+        .then(res => {
+          return true
+        })
+    },
+
+    changePassword({commit}, data) {
+      console.log(data);
+      return Vue.http.post(
+        changePasswordURL,
+        data,
+        {
+          headers: {
+            'Authorization': tokenService.getAuthHeader()
+          }
+        }
+      )
+        .then(res => {
+          return true
+        })
+    },
+
+    loadProfile({commit}) {
+      Vue.http.get(profile_url, {
+        headers: {
+          'Authorization': tokenService.getAuthHeader()
+        }
+      })
+        .then(response => {
+          commit('setUser', response.body);
+        })
+    },
+
     logOut({commit}) {
       tokenService.deleteToken();
       commit('setAuth', false);
+      commit('setUser', {});
       router.push('/')
     }
-
   }
 })

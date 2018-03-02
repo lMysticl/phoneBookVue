@@ -1,5 +1,5 @@
 <template>
-  <v-app dark >
+  <v-app dark>
     <v-navigation-drawer
       v-model="drawer"
       fixed
@@ -20,7 +20,7 @@
 
         <v-list-tile v-if="!isAuth" avatar @click="openLoginModal">
           <v-list-tile-avatar>
-            <v-icon >fa-sign-in</v-icon>
+            <v-icon>fa-sign-in</v-icon>
           </v-list-tile-avatar>
 
           <v-list-tile-content>
@@ -40,7 +40,7 @@
 
         <v-divider/>
 
-        <v-list-tile avatar @click="toTestPage">
+        <v-list-tile avatar @click="goToPage('/contacts')">
           <v-list-tile-avatar>
             <v-icon>fa-sign-out</v-icon>
           </v-list-tile-avatar>
@@ -56,6 +56,11 @@
 
           <v-list-tile-content>
             <v-list-tile-title>Phone Book</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+        <v-list-tile avatar @click="goToPage('/user-edit')">
+          <v-list-tile-content>
+            <v-list-tile-title>User Profile</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
@@ -74,16 +79,26 @@
           Phone Book
         </v-btn>
 
-        <v-btn exact="" flat @click="toTestPage">
+        <v-btn exact="" flat @click="goToPage('/contacts')">
           Contacts Page
         </v-btn>
 
+        <v-btn exact="" flat @click="goToPage('/user-edit')">
+          User Profile
+        </v-btn>
       </v-toolbar-items>
 
-      <v-spacer/>
+      <v-chip v-if="isAuth" color="orange darken-3" text-color="white">
+        <v-avatar>
+          <img :src="user.avatar" alt="avatar">
+        </v-avatar>
+        {{ user.username }}
+      </v-chip>
+
+      <v-spacer />
 
       <v-toolbar-items class="hidden-xs-only">
-        <v-btn v-if="!isAuth" flat  @click="openRegisterModal">
+        <v-btn v-if="!isAuth" flat @click="openRegisterModal">
           <v-icon left>fa-user-plus</v-icon>
           Registration
         </v-btn>
@@ -101,7 +116,9 @@
     </v-toolbar>
 
     <v-content>
-      <router-view/>
+      <transition name="scale-transition" mode="out-in">
+        <router-view :user="user"/>
+      </transition>
     </v-content>
 
     <app-login
@@ -123,8 +140,8 @@
 <script>
 
   import appLogin from '@/components/app-login'
-
   import appRegistration from '@/components/registration'
+
 
   export default {
     components: {
@@ -135,52 +152,60 @@
       return {
         drawer: false,
         login: false,
-        register: false,
+        register: false
       }
     },
     methods: {
-      openLoginModal () {
+      openLoginModal() {
         this.login = true
       },
 
-      closeRegisterModal () {
+      closeRegisterModal() {
         this.register = false
       },
-      openRegisterModal () {
+      openRegisterModal() {
         this.register = true
       },
 
-      closeLoginModal () {
+      closeLoginModal() {
         this.login = false
       },
       logOut() {
         this.$store.dispatch('logOut')
       },
-      toTestPage () {
+      goToPage(toPage) {
         if (this.isAuth) {
-          this.$router.push('/contacts')
+          this.$router.push(toPage)
         } else {
           this.openLoginModal()
         }
       }
     },
+    mounted () {
+      if (this.isAuth) {
+        this.$store.dispatch('loadProfile')
+      }
+    },
+    watch: {
+      isAuth (v) {
+        if (v) {
+          this.$store.dispatch('loadProfile')
+        }
+      }
+    },
     computed: {
-      todayYear() {
+      todayYear () {
         return new Date().getFullYear()
       },
 
-      isAuth() {
+      user () {
+        return this.$store.getters.user
+      },
+
+      isAuth () {
         return this.$store.getters.isAuth
       }
-    },
-    name: 'App',
-    // watch: {
-    //   isAuth (v) {
-    //     if(v) {
-    //       this.login = false
-    //     }
-    //   }
-    // }
+    }
   }
 </script>
 
